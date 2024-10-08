@@ -1,41 +1,48 @@
 import React, { useState } from 'react';
-import '../styles/SignupSeller.css'; // Assuming you have a separate CSS file for styling
+import { useNavigate } from 'react-router-dom';  // Import useNavigate
+import '../styles/SignupSeller.css';
 
 const SignupSeller = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [shopAddress, setShopAddress] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  
+  const navigate = useNavigate();  // Define navigate function
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
-   try {
-    const response = await fetch('http://localhost:5019/signup-seller', {
+    console.log('Sending data:', { username, password, shopAddress });
+
+    try {
+      const response = await fetch('http://localhost:5052/api/SignupSeller', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            username,
-            password,
-            shopAddress,
-        })
-    });
+          username,
+          password,
+          shopAddress,
+        }),
+      });
 
-    // If the response is not OK (not in the range 200-299)
-    if (!response.ok) {
-        throw new Error('Network response was not ok');
+      console.log('Response status:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Error: ${errorData.error || 'Unknown error'}`);
+      }
+
+      const data = await response.json();
+      console.log('Signup successful:', data);
+      navigate('/seller-login');  // Redirect to login page after successful signup
+
+    } catch (error) {
+      console.error('Error during signup:', error.message);
+      setErrorMessage('An error occurred during signup. Please try again.');
     }
-
-    const data = await response.json();
-    console.log('Signup successful:', data);
-
-} catch (error) {
-    console.error('Error during signup:', error);
-    setErrorMessage('An error occurred. Please try again.');
-}
   };
 
   return (
@@ -51,7 +58,7 @@ const SignupSeller = () => {
           onChange={(e) => setUsername(e.target.value)}
           required
         />
-        
+
         <label htmlFor="password">Password:</label>
         <input
           type="password"
@@ -71,11 +78,10 @@ const SignupSeller = () => {
           onChange={(e) => setShopAddress(e.target.value)}
           required
         />
-        
+
         <button type="submit">Sign Up</button>
         {errorMessage && <div className="error-message">{errorMessage}</div>}
       </form>
-
     </div>
   );
 };

@@ -1,30 +1,36 @@
-// control/sellerController.js
-
 const Seller = require('../model/Seller');
 
 // Function to handle seller sign-up
-const signupSeller = (req, res) => {
+const signupSeller = async (req, res) => {
+  const { username, password, shopAddress } = req.body;
+
+  // Check if all fields are provided
+  if (!username || !password || !shopAddress) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  try {
+    // Check if seller already exists
+    const existingSeller = await Seller.findOne({ username });
+    if (existingSeller) {
+      return res.status(400).json({ error: 'Username already taken' });
+    }
+
+    // Create a new seller
     const newSeller = new Seller({
-        username: req.body.username,
-        password: req.body.password,
-        shopAddress: req.body.shopAddress
+      username,
+      password, // In real scenarios, hash the password before saving
+      shopAddress,
     });
 
-    newSeller.save()
-        .then(() => {
-            // Redirect to seller login page after successful signup
-            res.redirect('/SellerLogin');
-        })
-        .catch(err => {
-            console.error('Error saving seller data:', err);
-            if (err.code === 11000) {
-                // Redirect back to signup page with an error query parameter
-                res.redirect('/SignupSeller?error=username_taken');
-            } 
-        });
+    // Save the new seller to the database
+    await newSeller.save();
+
+    // Respond with success
+    res.status(201).json({ message: 'Seller registered successfully!' });
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
-
-module.exports = {
-    signupSeller
-};
+module.exports = { signupSeller };
