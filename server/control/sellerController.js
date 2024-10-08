@@ -20,10 +20,7 @@ const signupSeller = (req, res) => {
             if (err.code === 11000) {
                 // Redirect back to signup page with an error query parameter
                 res.redirect('/SignupSeller?error=username_taken');
-            } else {
-                // Redirect to signup page in case of other errors
-                res.redirect('/SignupSeller');
-            }
+            } 
         });
 };
 

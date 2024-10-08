@@ -10,36 +10,32 @@ const SignupSeller = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch('http://localhost:3005/signup-seller', {
+    
+   try {
+    const response = await fetch('http://localhost:5019/signup-seller', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/json',
         },
-        body: new URLSearchParams({
-          username,
-          password,
-          shopAddress,
-        }),
-      });
+        body: JSON.stringify({
+            username,
+            password,
+            shopAddress,
+        })
+    });
 
-      // Check if the response indicates a redirect or an error
-      if (response.redirected) {
-        // Redirect to the seller login page on successful registration
-        window.location.href = response.url;
-      } else {
-        // Handle errors if registration fails
-        const errorMessage = new URL(response.url).searchParams.get('error');
-        if (errorMessage === 'username_taken') {
-          setErrorMessage('Username is already taken. Please choose another one.');
-        } else {
-          setErrorMessage('An error occurred. Please try again.');
-        }
-      }
-    } catch (error) {
-      console.error('Error during signup:', error);
-      setErrorMessage('An error occurred. Please try again.');
+    // If the response is not OK (not in the range 200-299)
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
     }
+
+    const data = await response.json();
+    console.log('Signup successful:', data);
+
+} catch (error) {
+    console.error('Error during signup:', error);
+    setErrorMessage('An error occurred. Please try again.');
+}
   };
 
   return (
@@ -79,6 +75,7 @@ const SignupSeller = () => {
         <button type="submit">Sign Up</button>
         {errorMessage && <div className="error-message">{errorMessage}</div>}
       </form>
+
     </div>
   );
 };
