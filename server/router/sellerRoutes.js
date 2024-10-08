@@ -3,6 +3,7 @@ const router = express.Router();
 const sellerController = require('../control/sellerController');
 
 // Route for seller signup
-router.post('/signupSeller', sellerController.signupSeller);
+router.post('/SignupSeller', sellerController.signupSeller);
 
 module.exports = router;
+

@@ -14,7 +14,7 @@ const SignupCustomer = () => {
     console.log('Sending data:', { username, password });
 
     try {
-      const response = await fetch('http://localhost:5057/api/SignupCustomer', {
+      const response = await fetch('http://localhost:5058/api/SignupCustomer', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -7,7 +7,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:3004', // Update this to match your frontend URL
+  origin: 'http://localhost:3005', // Update this to match your frontend URL
   methods: ['POST', 'GET'],
   credentials: true
 }));
@@ -22,12 +22,12 @@ mongoose.connect('mongodb://localhost:27017/Marketplace')
 
 // Import routes
 const customerRoutes = require('./router/customerRoutes');
-
+const sellerRoutes=require('./router/sellerRoutes');
 // Use routes (ensure the /api prefix is used in frontend and backend consistently)
 app.use('/api', customerRoutes);
-
+app.use('/api', sellerRoutes);
 // Start the server
-const port = 5057;
+const port = 5058;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
