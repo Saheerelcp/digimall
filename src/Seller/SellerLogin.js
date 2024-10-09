@@ -1,8 +1,7 @@
-// src/seller/SellerLogin.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import '../styles/SellerLogin.css'; // Optional: Create a separate CSS file for styling
+import '../styles/SellerLogin.css';
 
 const SellerLogin = () => {
   const [username, setUsername] = useState('');
@@ -14,19 +13,18 @@ const SellerLogin = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch('/login', {
+      const response = await fetch('http://localhost:5086/api/SellerLogin', {  // Correct API URL
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password, role: 'seller' }),
+        body: JSON.stringify({ username, password }), // No need for "role: seller"
       });
 
       if (!response.ok) {
         const message = await response.text();
-        console.log("Error:", response.status, message);  // Log detailed error
+        console.log("Error:", response.status, message);
         setErrorMessage(message);
       } else {
-        // Redirect to a successful login page or dashboard
-        navigate('/dashboard');
+        navigate('/customer-login');  // Redirect to the seller dashboard after successful login
       }
     } catch (error) {
       setErrorMessage('An error occurred. Please try again.');

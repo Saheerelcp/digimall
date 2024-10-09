@@ -5,5 +5,7 @@ const sellerController = require('../control/sellerController');
 // Route for seller signup
 router.post('/SignupSeller', sellerController.signupSeller);
 
-module.exports = router;
+// Seller login route
+router.post('/SellerLogin', sellerController.loginSeller);
 
+module.exports = router;

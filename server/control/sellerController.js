@@ -4,33 +4,49 @@ const Seller = require('../model/Seller');
 const signupSeller = async (req, res) => {
   const { username, password, shopAddress } = req.body;
 
-  // Check if all fields are provided
   if (!username || !password || !shopAddress) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
   try {
-    // Check if seller already exists
     const existingSeller = await Seller.findOne({ username });
     if (existingSeller) {
       return res.status(400).json({ error: 'Username already taken' });
     }
 
-    // Create a new seller
     const newSeller = new Seller({
       username,
-      password, // In real scenarios, hash the password before saving
+      password,
       shopAddress,
     });
 
-    // Save the new seller to the database
     await newSeller.save();
-
-    // Respond with success
     res.status(201).json({ message: 'Seller registered successfully!' });
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
-module.exports = { signupSeller };
+// Login controller function
+const loginSeller = async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const seller = await Seller.findOne({ username });
+
+    if (!seller) {
+      return res.status(404).json({ error: "Username not found. Please sign up." });
+    }
+
+    if (seller.password !== password) {
+      return res.status(401).json({ error: "Incorrect password. Try again or reset your password." });
+    }
+
+    return res.status(200).json({ message: "Login successful." });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred. Please try again." });
+  }
+};
+
+module.exports = { signupSeller, loginSeller };  // Correct export

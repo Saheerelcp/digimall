@@ -16,7 +16,7 @@ const SignupSeller = () => {
     console.log('Sending data:', { username, password, shopAddress });
 
     try {
-      const response = await fetch('http://localhost:5058/api/SignupSeller', {
+      const response = await fetch('http://localhost:5086/api/SignupSeller', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ const SignupSeller = () => {
 
     } catch (error) {
       console.error('Error during signup:', error.message);
-      setErrorMessage('An error occurred during signup. Please try again.');
+      setErrorMessage('Username is already taken.');
     }
   };
 

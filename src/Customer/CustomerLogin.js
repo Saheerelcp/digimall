@@ -1,7 +1,6 @@
-// src/customer/CustomerLogin.js
+// CustomerLogin.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../styles/CustomerLogin.css'; // Optional: Create a separate CSS file for styling
+import { useNavigate } from 'react-router-dom';  // For redirecting after successful login
 
 const CustomerLogin = () => {
   const [username, setUsername] = useState('');
@@ -13,19 +12,20 @@ const CustomerLogin = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch('/login', {
+      // Send POST request to the backend
+      const response = await fetch('http://localhost:5086/api/CustomerLogin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password, role: 'customer' }),
+        body: JSON.stringify({ username, password }),
       });
 
       if (!response.ok) {
         const message = await response.text();
-        console.log("Error:", response.status, message);  // Log detailed error
-        setErrorMessage(message);
+        console.log("Error:", response.status, message);
+        setErrorMessage(message);  // Display error message
       } else {
-        // Redirect to a successful login page or dashboard
-        navigate('/dashboard');
+        // Redirect to the home page or another page after successful login
+        navigate('/seller-login');
       }
     } catch (error) {
       setErrorMessage('An error occurred. Please try again.');
