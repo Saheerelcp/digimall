@@ -1,30 +1,27 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate
-import '../styles/SignupSeller.css';
+import { useNavigate } from 'react-router-dom';
+import '../styles/SignupCustomer.css'; // Assuming you have a separate CSS file for styling
 
-const SignupSeller = () => {
-  const [username, setUsername] = useState('');
+const SignupCustomer = () => {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [shopAddress, setShopAddress] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  
-  const navigate = useNavigate();  // Define navigate function
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log('Sending data:', { username, password, shopAddress });
+    console.log('Sending data:', { email, password });
 
     try {
-      const response = await fetch('http://localhost:5086/api/SignupSeller', {
+      const response = await fetch('http://localhost:5099/api/SignupCustomer', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username,
+          email,
           password,
-          shopAddress,
         }),
       });
 
@@ -37,25 +34,27 @@ const SignupSeller = () => {
 
       const data = await response.json();
       console.log('Signup successful:', data);
-      navigate('/seller-login');  // Redirect to login page after successful signup
+
+      // Redirect to login page after successful signup
+      navigate('/customer-login');
 
     } catch (error) {
       console.error('Error during signup:', error.message);
-      setErrorMessage('Username is already taken.');
+      setErrorMessage(error.message);
     }
   };
 
   return (
     <div className="container">
-      <h1>Sign Up as Seller</h1>
+      <h1>Sign Up as Customer</h1>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username:</label>
+        <label htmlFor="email">Email:</label>
         <input
-          type="text"
-          id="username"
-          name="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          type="email"
+          id="email"
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
 
@@ -69,16 +68,6 @@ const SignupSeller = () => {
           required
         />
 
-        <label htmlFor="shopAddress">Shop Address:</label>
-        <input
-          type="text"
-          id="shopAddress"
-          name="shopAddress"
-          value={shopAddress}
-          onChange={(e) => setShopAddress(e.target.value)}
-          required
-        />
-
         <button type="submit">Sign Up</button>
         {errorMessage && <div className="error-message">{errorMessage}</div>}
       </form>
@@ -86,4 +75,4 @@ const SignupSeller = () => {
   );
 };
 
-export default SignupSeller;
+export default SignupCustomer;

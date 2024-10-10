@@ -1,9 +1,8 @@
-// CustomerLogin.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';  // For redirecting after successful login
 
 const CustomerLogin = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');  // Use email instead of username
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
@@ -13,10 +12,10 @@ const CustomerLogin = () => {
 
     try {
       // Send POST request to the backend
-      const response = await fetch('http://localhost:5086/api/CustomerLogin', {
+      const response = await fetch('http://localhost:5099/api/CustomerLogin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),  // Use email in the request
       });
 
       if (!response.ok) {
@@ -37,13 +36,13 @@ const CustomerLogin = () => {
       <h1>Customer Login</h1>
       <form onSubmit={handleSubmit}>
         <div className="input-group">
-          <label htmlFor="username">Username</label>
+          <label htmlFor="email">Email</label>
           <input
-            type="text"
-            id="username"
-            name="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            type="email"
+            id="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}  // Handle email input change
             required
           />
         </div>

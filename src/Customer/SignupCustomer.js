@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Use navigate instead of history
+import { useNavigate } from 'react-router-dom';
 import '../styles/SignupCustomer.css'; // Assuming you have a separate CSS file for styling
 
 const SignupCustomer = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');  // Email state
+  const [password, setPassword] = useState(''); // Password state
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate(); // Initialize navigate hook
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log('Sending data:', { username, password });
+    console.log('Sending data:', { email, password });  // Log email and password data
 
     try {
-      const response = await fetch('http://localhost:5086/api/SignupCustomer', {
+      const response = await fetch('http://localhost:5099/api/SignupCustomer', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username,
-          password,
+          email,  // Send email to the backend
+          password, // Send password to the backend
         }),
       });
 
@@ -36,7 +36,7 @@ const SignupCustomer = () => {
       console.log('Signup successful:', data);
 
       // Redirect to login page after successful signup
-      navigate('/customer-login'); // Use navigate to redirect to login page
+      navigate('/customer-login');
 
     } catch (error) {
       console.error('Error during signup:', error.message);
@@ -48,23 +48,23 @@ const SignupCustomer = () => {
     <div className="container">
       <h1>Sign Up as Customer</h1>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username:</label>
+        <label htmlFor="email">Email:</label>  {/* Email input field */}
         <input
-          type="text"
-          id="username"
-          name="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          type="email"
+          id="email"
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}  // Handle email input
           required
         />
 
-        <label htmlFor="password">Password:</label>
+        <label htmlFor="password">Password:</label> {/* Password input field */}
         <input
           type="password"
           id="password"
           name="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)} // Handle password input
           required
         />
 

@@ -2,40 +2,43 @@ const Seller = require('../model/Seller');
 
 // Function to handle seller sign-up
 const signupSeller = async (req, res) => {
-  const { username, password, shopAddress } = req.body;
+  const { password, email } = req.body; // Only email and password are needed
 
-  if (!username || !password || !shopAddress) {
-    return res.status(400).json({ error: 'All fields are required' });
+  // Check if any required fields are missing
+  if (!password || !email) {
+    return res.status(400).json({ error: 'Email and password are required' });
   }
 
   try {
-    const existingSeller = await Seller.findOne({ username });
-    if (existingSeller) {
-      return res.status(400).json({ error: 'Username already taken' });
+    // Check if the email already exists in the database
+    const existingSellerByEmail = await Seller.findOne({ email });
+    if (existingSellerByEmail) {
+      return res.status(400).json({ error: 'Email already associated with another seller' });
     }
 
+    // Create a new seller instance
     const newSeller = new Seller({
-      username,
-      password,
-      shopAddress,
+      email,  // Save email in the database
+      password,  // Save password in the database
     });
 
     await newSeller.save();
     res.status(201).json({ message: 'Seller registered successfully!' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
-// Login controller function
+// Login controller function (unchanged)
 const loginSeller = async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;  // Use email instead of username
 
   try {
-    const seller = await Seller.findOne({ username });
+    const seller = await Seller.findOne({ email });  // Find by email instead of username
 
     if (!seller) {
-      return res.status(404).json({ error: "Username not found. Please sign up." });
+      return res.status(404).json({ error: "Email not found. Please sign up." });
     }
 
     if (seller.password !== password) {
@@ -49,4 +52,4 @@ const loginSeller = async (req, res) => {
   }
 };
 
-module.exports = { signupSeller, loginSeller };  // Correct export
+module.exports = { signupSeller, loginSeller }; // Correct export
