@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // MongoDB connection
-mongoose.connect('mongodb://localhost:27017/Marketplace')
+mongoose.connect('mongodb://localhost:27017/giveandtake')
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Error connecting to MongoDB:', err));
 
@@ -27,7 +27,7 @@ const sellerRoutes=require('./router/sellerRoutes');
 app.use('/api', customerRoutes);
 app.use('/api', sellerRoutes);
 // Start the server
-const port = 5087;
+const port = 5090;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

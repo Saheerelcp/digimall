@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/SignupCustomer.css'; // Assuming you have a separate CSS file for styling
+import '../styles/SignupSeller.css'; // Assuming you have a separate CSS file for styling sellers
 
-const SignupCustomer = () => {
+const SignupSeller = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -14,7 +14,7 @@ const SignupCustomer = () => {
     console.log('Sending data:', { email, password });
 
     try {
-      const response = await fetch('http://localhost:5099/api/SignupCustomer', {
+      const response = await fetch('http://localhost:5090/api/SignupSeller', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,8 +35,8 @@ const SignupCustomer = () => {
       const data = await response.json();
       console.log('Signup successful:', data);
 
-      // Redirect to login page after successful signup
-      navigate('/customer-login');
+      // Redirect to seller login page after successful signup
+      navigate('/seller-login');
 
     } catch (error) {
       console.error('Error during signup:', error.message);
@@ -46,7 +46,7 @@ const SignupCustomer = () => {
 
   return (
     <div className="container">
-      <h1>Sign Up as Customer</h1>
+      <h1>Sign Up as Seller</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="email">Email:</label>
         <input
@@ -75,4 +75,4 @@ const SignupCustomer = () => {
   );
 };
 
-export default SignupCustomer;
+export default SignupSeller;
