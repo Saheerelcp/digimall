@@ -12,7 +12,7 @@ const CustomerLogin = () => {
 
     try {
       // Send POST request to the backend
-      const response = await fetch('http://localhost:5107/api/CustomerLogin', {
+      const response = await fetch('http://localhost:5112/api/CustomerLogin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),  // Use email in the request
@@ -24,7 +24,7 @@ const CustomerLogin = () => {
         setErrorMessage(message);  // Display error message
       } else {
         // Redirect to the home page or another page after successful login
-        navigate('/seller-login');
+        navigate('/customer-dashboard');
       }
     } catch (error) {
       setErrorMessage('An error occurred. Please try again.');

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-
 const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -9,7 +8,7 @@ const ResetPassword = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-  const { email } = location.state;
+  const { email, userType } = location.state; // Destructure userType from location.state
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,7 +20,7 @@ const ResetPassword = () => {
 
     try {
       // Make an API call to reset the password
-      const response = await fetch('http://localhost:5107/api/reset-password', {
+      const response = await fetch('http://localhost:5112/api/reset-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,7 +34,13 @@ const ResetPassword = () => {
       }
 
       setSuccessMessage('Password reset successfully!');
-      navigate('/customer-login');
+
+      // Navigate based on userType
+      if (userType === 'seller') {
+        navigate('/seller-login'); // Navigate to seller login
+      } else {
+        navigate('/customer-login'); // Navigate to customer login
+      }
     } catch (error) {
       setErrorMessage(error.message);
     }
