@@ -12,7 +12,7 @@ const SellerLogin = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5090/api/SellerLogin', {  // Correct API URL
+      const response = await fetch('http://localhost:5092/api/SellerLogin', {  // Correct API URL
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }), // Now sending email and password

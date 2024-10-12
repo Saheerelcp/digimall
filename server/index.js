@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-
+const authRoutes = require('./router/authRoutes');
+require('dotenv').config();
 // Initialize Express app
 const app = express();
 
@@ -26,8 +27,9 @@ const sellerRoutes=require('./router/sellerRoutes');
 // Use routes (ensure the /api prefix is used in frontend and backend consistently)
 app.use('/api', customerRoutes);
 app.use('/api', sellerRoutes);
+app.use('/api', authRoutes);
 // Start the server
-const port = 5090;
+const port = 5092;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
