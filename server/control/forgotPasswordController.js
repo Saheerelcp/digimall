@@ -1,12 +1,22 @@
-// controllers/forgotPasswordController.js
 const Seller = require('../model/Seller');
 const Customer = require('../model/Customer');
-const axios = require('axios');
 const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
+console.log(process.env.EMAIL_USER);  // Should output your email address
+console.log(process.env.EMAIL_PASS);  // Should output your app passwor
+// Configure Nodemailer transporter
 
-// EmailJS API endpoint
-const EMAILJS_ENDPOINT = 'https://api.emailjs.com/api/v1.0/email/send';
+const transporter = nodemailer.createTransport({
+  service: 'gmail',  // You can use other email service providers
+  auth: {
+    user: process.env.EMAIL_USER, // Your email
+    pass: process.env.EMAIL_PASS, // Your email password or app-specific password
+  },
+  tls: {
+    rejectUnauthorized: false, // Allow self-signed certificates
+  },
+});
 
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
@@ -34,33 +44,29 @@ const forgotPassword = async (req, res) => {
     const otp = crypto.randomInt(100000, 999999).toString();
     const otpExpiration = Date.now() + 10 * 60 * 1000; // 10 minutes
 
-    // Save OTP and expiration
+    // Save OTP and expiration in the database
     user.otp = otp;
     user.otpExpiration = otpExpiration;
     await user.save();
 
-    // Prepare EmailJS payload
-    const emailPayload = {
-      service_id: process.env.EMAILJS_SERVICE_ID,
-      template_id: process.env.EMAILJS_TEMPLATE_ID,
-      user_id: process.env.EMAILJS_USER_ID,
-      template_params: {
-        to_email: email,
-        otp: otp,
-        user_type: userType.charAt(0).toUpperCase() + userType.slice(1), // Capitalize
-      },
+    // Prepare the email content
+    const mailOptions = {
+      from: process.env.EMAIL_USER,  // Your email address
+      to: email,  // Recipient's email address
+      subject: 'Password Reset OTP',
+      text: `Hello ${userType.charAt(0).toUpperCase() + userType.slice(1)},\n\nYour OTP for password reset is ${otp}.\nThis OTP is valid for 10 minutes.\n\nThank you!`,
     };
 
-    // Send OTP via EmailJS
-    const emailResponse = await axios.post(EMAILJS_ENDPOINT, emailPayload, {
-      headers: { 'Content-Type': 'application/json' },
+    // Send the OTP email using Nodemailer
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.error('Error sending email:', error);
+        return res.status(500).json({ error: 'Failed to send OTP email.' });
+      } else {
+        console.log('Email sent: ' + info.response);
+        return res.status(200).json({ message: 'OTP sent to your email.' });
+      }
     });
-
-    if (emailResponse.status === 200) {
-      return res.status(200).json({ message: 'OTP sent to your email.' });
-    } else {
-      throw new Error('Failed to send OTP email.');
-    }
   } catch (error) {
     console.error('Error in forgotPassword:', error.message);
     return res.status(500).json({ error: 'Server error.' });

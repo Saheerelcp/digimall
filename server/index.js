@@ -29,7 +29,7 @@ app.use('/api', customerRoutes);
 app.use('/api', sellerRoutes);
 app.use('/api', authRoutes);
 // Start the server
-const port = 5092;
+const port = 5107;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
