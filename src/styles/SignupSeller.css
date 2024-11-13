@@ -1,63 +1,107 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
+/* Container styling */
 .container {
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    width: 300px;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Heading */
+  .container h1 {
+    font-size: 24px;
     text-align: center;
-}
-
-h1 {
-    color: #333;
+    color: #006400; /* Dark green */
     margin-bottom: 20px;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-label {
+  }
+  
+  /* Label styling */
+  .container label {
+    display: block;
+    font-size: 14px;
+    color: #333333;
     margin-top: 10px;
-    font-weight: bold;
-    text-align: left;
-}
-
-input {
+  }
+  
+  /* Input and Textarea styling */
+  .container input[type="email"],
+  .container input[type="password"],
+  .container input[type="text"],
+  .container textarea {
+    width: 100%;
     padding: 10px;
     margin-top: 5px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
-    border-radius: 3px;
-}
-
-button {
-    padding: 10px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 16px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .container textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  /* Button styling */
+  .container button {
     width: 100%;
-}
-
-button:hover {
-    background-color: #218838;
-}
-
-.error-message {
-    color: red;
+    padding: 12px;
+    background-color: #008000; /* Green */
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
     margin-top: 10px;
-}
+  }
+  
+  .container button:hover {
+    background-color: #006400; /* Darker green */
+  }
+  
+  /* Error message styling */
+  .error-message {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #ffd2d2;
+    color: #d8000c;
+    border-radius: 4px;
+    text-align: center;
+  }
+  
+  /* Back button styling inside error message */
+  .back-button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #f0f0f0;
+    color: #333333;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .back-button:hover {
+    background-color: #e0e0e0;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 600px) {
+    .container {
+      padding: 15px;
+    }
+  
+    .container h1 {
+      font-size: 20px;
+    }
+  
+    .container button {
+      padding: 10px;
+      font-size: 14px;
+    }
+  }
+  

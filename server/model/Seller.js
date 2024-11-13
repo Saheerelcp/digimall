@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const SellerSchema = new Schema({
+const SellerSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  otp: { type: String, default: null },
-  otpExpiration: { type: Date, default: null },
-  // Add other seller-specific fields here
+  sellerName: { type: String, required: true },
+  shopName: { type: String, required: true },
+  contactNumber: { type: String, required: true },
+  shopAddress: { type: String, required: true }
 });
 
 module.exports = mongoose.model('Seller', SellerSchema);

@@ -2,11 +2,11 @@ const Seller = require('../model/Seller');
 
 // Function to handle seller sign-up
 const signupSeller = async (req, res) => {
-  const { password, email } = req.body; // Only email and password are needed
+  const { email, password, sellerName, shopName, contactNumber, shopAddress } = req.body;
 
   // Check if any required fields are missing
-  if (!password || !email) {
-    return res.status(400).json({ error: 'Email and password are required' });
+  if (!email || !password || !sellerName || !shopName || !contactNumber || !shopAddress) {
+    return res.status(400).json({ error: 'All fields are required' });
   }
 
   try {
@@ -16,10 +16,14 @@ const signupSeller = async (req, res) => {
       return res.status(400).json({ error: 'Email already associated with another seller' });
     }
 
-    // Create a new seller instance
+    // Create a new seller instance with all the provided details
     const newSeller = new Seller({
-      email,  // Save email in the database
-      password,  // Save password in the database
+      email,
+      password,
+      sellerName,
+      shopName,
+      contactNumber,
+      shopAddress
     });
 
     await newSeller.save();
@@ -52,4 +56,4 @@ const loginSeller = async (req, res) => {
   }
 };
 
-module.exports = { signupSeller, loginSeller }; // Correct export
+module.exports = { signupSeller, loginSeller };
