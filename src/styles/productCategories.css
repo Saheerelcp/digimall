@@ -1,0 +1,42 @@
+/* ProductCategories.css */
+
+.categories-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    grid-template-rows: repeat(6, auto); /* 6 rows */
+    gap: 15px;
+    max-width: 400px; /* Adjust width as needed */
+    margin: 0 auto;
+  }
+  
+  .category-button {
+    background-color: #4caf50; /* Green color */
+    color: white;
+    padding: 15px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+  
+  .category-button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+  }
+  

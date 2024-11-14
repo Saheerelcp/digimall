@@ -48,7 +48,7 @@ const SignupSeller = () => {
       console.log('Signup successful:', data);
 
       // Redirect to seller login page after successful signup
-      navigate('/seller-login');
+      navigate('/seller-dashboard');
 
     } catch (error) {
       console.error('Error during signup:', error.message);
