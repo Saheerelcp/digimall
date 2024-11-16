@@ -26,14 +26,16 @@ mongoose.connect('mongodb://localhost:27017/giveandtake')
 const customerRoutes = require('./router/customerRoutes');
 const sellerRoutes=require('./router/sellerRoutes');
 const productRoutes = require('./router/productRoutes');
+const getProductRoutes=require('./router/getProductRoutes');
 // Use routes (ensure the /api prefix is used in frontend and backend consistently)
 app.use('/api', customerRoutes);
 app.use('/api', sellerRoutes);
 app.use('/api', authRoutes);
 // Use the product router
 app.use('/api/products', productRoutes);
+app.use('/api',getProductRoutes);
 // Start the server
-const port = 5113;
+const port = 5119;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

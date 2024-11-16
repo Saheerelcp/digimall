@@ -24,7 +24,7 @@ const SignupSeller = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5113/api/SignupSeller', {
+      const response = await fetch('http://localhost:5119/api/SignupSeller', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
