@@ -1,4 +1,3 @@
-// AddProduct.js
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import '../../styles/addProduct.css';
@@ -13,6 +12,9 @@ function AddProduct() {
   const [image, setImage] = useState(null); // To hold the product image
   const [products, setProducts] = useState([]);
 
+  // Get the seller's ID from local storage
+  const sellerId = localStorage.getItem('sellerId');
+
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -24,24 +26,62 @@ function AddProduct() {
     }
   };
 
-  function quantityType(category, pdctQty) {
-    if (['Groceries', 'Vegetables', 'Fruits', 'Bakery', 'cakes'].includes(category)) {
-        return <p>Quantity: {`${pdctQty} kg`}</p>;
-    } else {
-        return <p>Quantity: {`${pdctQty} items`}</p>;
+  // Determine the quantity type message based on the category
+  const quantityType = (category, pdctQty) => {
+    if (category === 'Groceries' || 'Vegetables' || 'Fruits' || 'Cakes' || 'Bakery') {
+      return `Quantity: ${pdctQty} kg`;
     }
-  }
+    return `Quantity: ${pdctQty} items`;
+  };
 
-  const handleAddProduct = () => {
-    const newProduct = { productName, price, quantity, expiryDate, image, category };
-    setProducts([...products, newProduct]);
-    
-    // Clear inputs after adding
-    setProductName('');
-    setPrice('');
-    setQuantity('');
-    setExpiryDate('');
-    setImage(null);
+  const handleAddProduct = async () => {
+    // Check if the sellerId exists
+    console.log(sellerId);
+    if (!sellerId) {
+      alert('Seller not logged in.');
+      return;
+    }
+
+    const newProduct = {
+      productName,
+      price,
+      quantity,
+      expiryDate,
+      image,
+      category,
+      sellerId
+    };
+
+    try {
+      // Send the product data to the backend using fetch
+      const response = await fetch('http://localhost:5113/api/products/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newProduct),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add product');
+      }
+
+      const responseData = await response.json();
+      console.log(responseData);
+
+      // Add product to state for local display
+      setProducts([...products, newProduct]);
+
+      // Clear inputs after adding
+      setProductName('');
+      setPrice('');
+      setQuantity('');
+      setExpiryDate('');
+      setImage(null);
+    } catch (error) {
+      console.error('Error adding product:', error);
+      alert('Error adding product.');
+    }
   };
 
   return (
@@ -109,10 +149,7 @@ function AddProduct() {
               <div className="product-info">
                 <h3>{product.productName}</h3>
                 <p>Price: ${product.price}</p>
-                
-                {/* Call quantityType to render the appropriate quantity text */}
-                {quantityType(product.category, product.quantity)}
-                
+                <p>{quantityType(category, product.quantity)}</p>
                 <p>Expiry: {product.expiryDate || 'N/A'}</p>
               </div>
             </div>

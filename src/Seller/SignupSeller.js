@@ -11,6 +11,7 @@ const SignupSeller = () => {
   const [contactNumber, setContactNumber] = useState('');
   const [shopAddress, setShopAddress] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
   const handleSubmitInitial = (e) => {
@@ -23,7 +24,7 @@ const SignupSeller = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5112/api/SignupSeller', {
+      const response = await fetch('http://localhost:5113/api/SignupSeller', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,8 +48,16 @@ const SignupSeller = () => {
       const data = await response.json();
       console.log('Signup successful:', data);
 
-      // Redirect to seller login page after successful signup
-      navigate('/seller-dashboard');
+      // Store sellerId in localStorage (optional)
+      localStorage.setItem('sellerId', data.sellerId);
+
+      // Set a success message
+      setSuccessMessage(`Congratulations, welcome to ${shopName}!`);
+
+      // Redirect after a short delay
+      setTimeout(() => {
+        navigate('/seller-dashboard');
+      }, 2000);
 
     } catch (error) {
       console.error('Error during signup:', error.message);
@@ -130,12 +139,17 @@ const SignupSeller = () => {
           <button type="submit">Sign Up</button>
 
           {errorMessage && (
-            <div className="error-message">
+            <div className="error-message" style={{ color: 'red' }}>
               {errorMessage}
-              <button onClick={() => setStep(1)} className="back-button">Back</button>
             </div>
           )}
         </form>
+      )}
+
+      {successMessage && (
+        <div className="success-message" style={{ color: 'green', marginTop: '20px' }}>
+          {successMessage}
+        </div>
       )}
     </div>
   );

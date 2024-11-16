@@ -28,13 +28,14 @@ const signupSeller = async (req, res) => {
 
     await newSeller.save();
     res.status(201).json({ message: 'Seller registered successfully!' });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
-// Login controller function (unchanged)
+// Modified login controller function to include sellerId
 const loginSeller = async (req, res) => {
   const { email, password } = req.body;  // Use email instead of username
 
@@ -49,7 +50,12 @@ const loginSeller = async (req, res) => {
       return res.status(401).json({ error: "Incorrect password. Try again or reset your password." });
     }
 
-    return res.status(200).json({ message: "Login successful." });
+    // Return sellerId with the login success message
+    return res.status(200).json({
+      message: "Login successful.",
+      sellerId: seller._id // Include sellerId in the response
+    });
+
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "An error occurred. Please try again." });

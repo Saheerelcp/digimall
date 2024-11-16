@@ -6,7 +6,8 @@ const SellerSchema = new mongoose.Schema({
   sellerName: { type: String, required: true },
   shopName: { type: String, required: true },
   contactNumber: { type: String, required: true },
-  shopAddress: { type: String, required: true }
+  shopAddress: { type: String, required: true },
+  products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }] // References Product collection
 });
 
 module.exports = mongoose.model('Seller', SellerSchema);

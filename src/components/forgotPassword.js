@@ -12,7 +12,7 @@ const ForgotPassword = () => {
 
     try {
       // Make an API call to your backend to request an OTP
-      const response = await fetch('http://localhost:5112/api/forgot-password', {
+      const response = await fetch('http://localhost:5113/api/forgot-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

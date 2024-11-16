@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const authRoutes = require('./router/authRoutes');
+
 require('dotenv').config();
 // Initialize Express app
 const app = express();
@@ -24,12 +25,15 @@ mongoose.connect('mongodb://localhost:27017/giveandtake')
 // Import routes
 const customerRoutes = require('./router/customerRoutes');
 const sellerRoutes=require('./router/sellerRoutes');
+const productRoutes = require('./router/productRoutes');
 // Use routes (ensure the /api prefix is used in frontend and backend consistently)
 app.use('/api', customerRoutes);
 app.use('/api', sellerRoutes);
 app.use('/api', authRoutes);
+// Use the product router
+app.use('/api/products', productRoutes);
 // Start the server
-const port = 5112;
+const port = 5113;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

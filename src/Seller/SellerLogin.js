@@ -3,31 +3,47 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/SellerLogin.css';
 
 const SellerLogin = () => {
-  const [email, setEmail] = useState('');  // Changed from username to email
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false); // Loader state
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setErrorMessage(''); // Clear previous errors
+    setLoading(true); // Start loading
 
     try {
-      const response = await fetch('http://localhost:5112/api/SellerLogin', {  // Correct API URL
+      const response = await fetch('http://localhost:5113/api/SellerLogin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }), // Now sending email and password
+        body: JSON.stringify({ email, password }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const message = await response.text();
-        console.log("Error:", response.status, message);
-        setErrorMessage(message);
+        setErrorMessage(data.error || 'Login failed. Please try again.');
       } else {
-        navigate('/seller-dashboard');  // Redirect to the seller dashboard after successful login
+        // Store sellerId in local storage (optional)
+        localStorage.setItem('sellerId', data.sellerId);
+        // Redirect to seller dashboard
+        console.log(localStorage.getItem('sellerId'));
+
+        navigate('/seller-dashboard');
       }
     } catch (error) {
       setErrorMessage('An error occurred. Please try again.');
+    } finally {
+      setLoading(false); // Stop loading
     }
+  };
+
+  // Clear error when inputs change
+  const handleInputChange = (setter) => (event) => {
+    setter(event.target.value);
+    if (errorMessage) setErrorMessage('');
   };
 
   return (
@@ -35,13 +51,13 @@ const SellerLogin = () => {
       <h1>Seller Login</h1>
       <form onSubmit={handleSubmit}>
         <div className="input-group">
-          <label htmlFor="email">Email</label>  {/* Updated label */}
+          <label htmlFor="email">Email</label>
           <input
             type="email"
             id="email"
             name="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}  // Handle email change
+            onChange={handleInputChange(setEmail)}
             required
           />
         </div>
@@ -52,14 +68,22 @@ const SellerLogin = () => {
             id="password"
             name="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handleInputChange(setPassword)}
             required
           />
         </div>
-        <button type="submit">Login</button>
-        <a href="/forgot-password" className="forgot-password">Forgot Password?</a>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
+        <a href="/forgot-password" className="forgot-password">
+          Forgot Password?
+        </a>
       </form>
-      {errorMessage && <div id="error-message" style={{ color: 'red' }}>{errorMessage}</div>}
+      {errorMessage && (
+        <div id="error-message" style={{ color: 'red', marginTop: '10px' }}>
+          {errorMessage}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,9 +1,7 @@
-const express = require('express');
-const router = express.Router();
 const Product = require('../model/Product');
 
-// Route to add product
-router.post('/add', async (req, res) => {
+// Add product function (already handled in route)
+exports.addProduct = async (req, res) => {
   const { productName, price, quantity, expiryDate, image, category, sellerId } = req.body;
 
   try {
@@ -23,6 +21,4 @@ router.post('/add', async (req, res) => {
     console.error(error);
     res.status(500).json({ message: 'Error adding product' });
   }
-});
-
-module.exports = router;
+};

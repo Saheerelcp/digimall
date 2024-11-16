@@ -15,7 +15,7 @@ const OtpVerification = () => {
 
     try {
       // Make an API call to verify the OTP
-      const response = await fetch('http://localhost:5112/api/verify-otp', {
+      const response = await fetch('http://localhost:5113/api/verify-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
