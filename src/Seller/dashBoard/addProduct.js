@@ -24,7 +24,7 @@ function AddProduct() {
       }
 
       try {
-        const response = await fetch(`http://localhost:5119/api/products/${sellerId}`);
+        const response = await fetch(`http://localhost:5121/api/products/${sellerId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch products');
         }
@@ -79,7 +79,7 @@ function AddProduct() {
 
     try {
       // Send the product data to the backend using fetch
-      const response = await fetch('http://localhost:5119/api/products/add', {
+      const response = await fetch('http://localhost:5121/api/products/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -162,7 +162,7 @@ function AddProduct() {
       <div className="products-grid">
         {products
           .filter((product) =>
-            product.productName.toLowerCase().includes(searchTerm.toLowerCase())
+            product.productName.toLowerCase().includes(searchTerm.toLowerCase() ) &&  product.category === category 
           )
           .map((product, index) => (
             <div className="product-card" key={index}>

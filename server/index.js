@@ -35,7 +35,7 @@ app.use('/api', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api',getProductRoutes);
 // Start the server
-const port = 5119;
+const port = 5121;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
