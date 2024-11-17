@@ -15,7 +15,7 @@ const SellerLogin = () => {
     setLoading(true); // Start loading
 
     try {
-      const response = await fetch('http://localhost:5123/api/SellerLogin', {
+      const response = await fetch('http://localhost:5129/api/SellerLogin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

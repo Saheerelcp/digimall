@@ -9,7 +9,7 @@ function AddProduct() {
   const [price, setPrice] = useState('');
   const [quantity, setQuantity] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
-  const [image, setImage] = useState(null); // To hold the product image
+  const [imageUrl, setImageUrl] = useState(''); // State to store the image URL after upload
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null); // Handle error state
 
@@ -32,7 +32,7 @@ function AddProduct() {
       }
 
       try {
-        const response = await fetch(`http://localhost:5123/api/products/${sellerId}`);
+        const response = await fetch(`http://localhost:5129/api/products/${sellerId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch products');
         }
@@ -52,26 +52,47 @@ function AddProduct() {
     setSearchTerm(e.target.value);
   };
 
+  const handleFileUpload = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file); // Append the file to the FormData object
+
+    try {
+      const response = await fetch('http://localhost:5129/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload image');
+      }
+
+      const data = await response.json();
+      setImageUrl(data.fileUrl); // Store the returned file URL in the state
+    } catch (error) {
+      console.error('Image upload failed:', error);
+    }
+  };
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(URL.createObjectURL(file)); // Create a URL for the image preview
+      handleFileUpload(file); // Upload the image
     }
   };
-  
+
   const handleRemoveProduct = async (productId) => {
     try {
-      const response = await fetch(`http://localhost:5123/api/products/${productId}`, {
+      const response = await fetch(`http://localhost:5129/api/products/${productId}`, {
         method: 'DELETE',
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to delete product');
       }
-  
+
       const responseData = await response.json();
       console.log(responseData);
-  
+
       // Remove the product from the state
       setProducts(products.filter((product) => product._id !== productId));
     } catch (error) {
@@ -79,7 +100,7 @@ function AddProduct() {
       alert('Error deleting product.');
     }
   };
-  
+
   const handleAddProduct = async () => {
     // Check if the sellerId exists
     if (!sellerId) {
@@ -92,14 +113,14 @@ function AddProduct() {
       price,
       quantity,
       expiryDate,
-      image,
+      image: imageUrl, // Use the image URL returned from the server
       category,
       sellerId,
     };
 
     try {
       // Send the product data to the backend using fetch
-      const response = await fetch('http://localhost:5123/api/products/add', {
+      const response = await fetch('http://localhost:5129/api/products/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -110,12 +131,10 @@ function AddProduct() {
       if (!response.ok) {
         throw new Error('Failed to add product');
       }
-       // Store productId in localStorage
-   
 
       const responseData = await response.json();
       console.log(responseData);
-      localStorage.setItem('productId', responseData.productId);
+
       // Add product to state for local display
       setProducts([...products, { ...newProduct, _id: responseData.productId }]);
 
@@ -124,13 +143,13 @@ function AddProduct() {
       setPrice('');
       setQuantity('');
       setExpiryDate('');
-      setImage(null);
+      setImageUrl(''); // Clear the image URL after adding product
     } catch (error) {
       console.error('Error adding product:', error);
       alert('Error adding product.');
     }
   };
-
+ 
   return (
     <div className="add-product-page">
       <h2>Add Product to {category}</h2>
@@ -175,6 +194,8 @@ function AddProduct() {
           accept="image/*"
           onChange={handleImageUpload}
         />
+       
+
         <button onClick={handleAddProduct}>Add Product</button>
       </div>
 
@@ -187,12 +208,13 @@ function AddProduct() {
             product.productName.toLowerCase().includes(searchTerm.toLowerCase()) && product.category === category
           )
           .map((product, index) => (
+           
             <div className="product-card" key={index}>
               <div className="image-placeholder">
                 {product.image ? (
                   <img src={product.image} alt={product.productName} />
                 ) : (
-                  'Image'
+                  'No Image'
                 )}
               </div>
               <div className="product-info">

@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const authRoutes = require('./router/authRoutes');
+const path = require('path');
 
 require('dotenv').config();
 // Initialize Express app
@@ -16,6 +17,8 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// Make the uploads folder publicly accessible
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // MongoDB connection
 mongoose.connect('mongodb://localhost:27017/giveandtake')
@@ -27,6 +30,8 @@ const customerRoutes = require('./router/customerRoutes');
 const sellerRoutes=require('./router/sellerRoutes');
 const productRoutes = require('./router/productRoutes');
 const getProductRoutes=require('./router/getProductRoutes');
+const uploadRoutes = require('./router/uploadRoutes');
+
 // Use routes (ensure the /api prefix is used in frontend and backend consistently)
 app.use('/api', customerRoutes);
 app.use('/api', sellerRoutes);
@@ -34,8 +39,10 @@ app.use('/api', authRoutes);
 // Use the product router
 app.use('/api/products', productRoutes);
 app.use('/api',getProductRoutes);
+app.use('/api', uploadRoutes);
 // Start the server
-const port = 5123;
+
+const port = 5129;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
