@@ -16,6 +16,14 @@ function AddProduct() {
   // Get the seller's ID from local storage
   const sellerId = localStorage.getItem('sellerId');
 
+  // Function to determine quantity type (kg or items)
+  const quantityType = (category, pdctQty) => {
+    const weightCategories = ['groceries', 'vegetables', 'fruits', 'cakes', 'bakery'];
+    return weightCategories.includes(category)
+      ? `Quantity: ${pdctQty} kg`
+      : `Quantity: ${pdctQty} items`;
+  };
+
   useEffect(() => {
     const fetchProducts = async () => {
       if (!sellerId) {
@@ -24,7 +32,7 @@ function AddProduct() {
       }
 
       try {
-        const response = await fetch(`http://localhost:5121/api/products/${sellerId}`);
+        const response = await fetch(`http://localhost:5123/api/products/${sellerId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch products');
         }
@@ -50,16 +58,28 @@ function AddProduct() {
       setImage(URL.createObjectURL(file)); // Create a URL for the image preview
     }
   };
-
-  // Determine the quantity type message based on the category
-  const quantityType = (category, pdctQty) => {
-    const categories = ['Groceries', 'Vegetables', 'Fruits', 'Cakes', 'Bakery'];
-    if (categories.includes(category)) {
-      return `Quantity: ${pdctQty} kg`;
+  
+  const handleRemoveProduct = async (productId) => {
+    try {
+      const response = await fetch(`http://localhost:5123/api/products/${productId}`, {
+        method: 'DELETE',
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to delete product');
+      }
+  
+      const responseData = await response.json();
+      console.log(responseData);
+  
+      // Remove the product from the state
+      setProducts(products.filter((product) => product._id !== productId));
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      alert('Error deleting product.');
     }
-    return `Quantity: ${pdctQty} items`;
   };
-
+  
   const handleAddProduct = async () => {
     // Check if the sellerId exists
     if (!sellerId) {
@@ -79,7 +99,7 @@ function AddProduct() {
 
     try {
       // Send the product data to the backend using fetch
-      const response = await fetch('http://localhost:5121/api/products/add', {
+      const response = await fetch('http://localhost:5123/api/products/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -90,12 +110,14 @@ function AddProduct() {
       if (!response.ok) {
         throw new Error('Failed to add product');
       }
+       // Store productId in localStorage
+   
 
       const responseData = await response.json();
       console.log(responseData);
-
+      localStorage.setItem('productId', responseData.productId);
       // Add product to state for local display
-      setProducts([...products, newProduct]);
+      setProducts([...products, { ...newProduct, _id: responseData.productId }]);
 
       // Clear inputs after adding
       setProductName('');
@@ -162,7 +184,7 @@ function AddProduct() {
       <div className="products-grid">
         {products
           .filter((product) =>
-            product.productName.toLowerCase().includes(searchTerm.toLowerCase() ) &&  product.category === category 
+            product.productName.toLowerCase().includes(searchTerm.toLowerCase()) && product.category === category
           )
           .map((product, index) => (
             <div className="product-card" key={index}>
@@ -176,8 +198,9 @@ function AddProduct() {
               <div className="product-info">
                 <h3>{product.productName}</h3>
                 <p>Price: ${product.price}</p>
-                <p>{quantityType(category, product.quantity)}</p>
+                <p>{quantityType(product.category, product.quantity)}</p>
                 <p>Expiry: {product.expiryDate || 'N/A'}</p>
+                <button className="remove-button" onClick={() => handleRemoveProduct(product._id)}>Remove</button>
               </div>
             </div>
           ))}

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import '../../styles/productCategories.css';// Import CSS file
 
 const categories = [
-  'Groceries', 'Vegetables', 'Fruits', 'Bakery', 'Clothes', 'Beauty Products',
+  'Beauty products', 'Vegetables', 'Fruits', 'Bakery', 'Clothes', 'Groceries',
   'Skin Care Products', 'Electronic Products', 'Machine & Tools', 'Ice Creams',
   'Cakes', 'Accessories'
 ];

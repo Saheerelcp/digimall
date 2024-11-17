@@ -10,7 +10,7 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: 'http://localhost:3001', // Update this to match your frontend URL
-  methods: ['POST', 'GET'],
+  methods: ['POST', 'GET','DELETE'],
   credentials: true
 }));
 
@@ -35,7 +35,7 @@ app.use('/api', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api',getProductRoutes);
 // Start the server
-const port = 5121;
+const port = 5123;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

@@ -17,11 +17,10 @@ router.post('/add', async (req, res) => {
       sellerId
     });
 
-    await newProduct.save();
-    res.status(201).json({ message: 'Product added successfully!', product: newProduct });
+    const savedProduct = await newProduct.save(); // Save the product to the database
+    res.status(201).json({ productId: savedProduct._id, message: 'Product added successfully' }); // Return the productId
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error adding product' });
+    res.status(500).json({ error: 'Failed to add product' });
   }
 });
 

@@ -12,7 +12,7 @@ const CustomerLogin = () => {
 
     try {
       // Send POST request to the backend
-      const response = await fetch('http://localhost:5121/api/CustomerLogin', {
+      const response = await fetch('http://localhost:5123/api/CustomerLogin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),  // Use email in the request

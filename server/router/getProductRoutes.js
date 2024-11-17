@@ -2,6 +2,16 @@ const express = require('express');
 const router = express.Router();
 const Product = require('../model/Product'); // Import Product model
 
+router.delete('/products/:productId', async (req, res) => {
+  const { productId } = req.params;
+
+  try {
+    await Product.findByIdAndDelete(productId); // MongoDB method to delete by ID
+    res.status(200).json({ message: 'Product deleted successfully.' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete product.' });
+  }
+});
 // Route to fetch products by sellerId
 router.get('/products/:sellerId', async (req, res) => {
   const { sellerId } = req.params; // Extract sellerId from the URL parameter

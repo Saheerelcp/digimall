@@ -103,4 +103,16 @@
     margin: 5px 0;
     color: #666;
   }
+  .remove-button {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .remove-button:hover {
+    background-color: darkred;
+  }
   
