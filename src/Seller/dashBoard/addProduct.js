@@ -55,7 +55,7 @@ function AddProduct() {
   const handleFileUpload = async (file) => {
     const formData = new FormData();
     formData.append('file', file); // Append the file to the FormData object
-
+    console.log(file);
     try {
       const response = await fetch('http://localhost:5129/api/upload', {
         method: 'POST',
@@ -65,8 +65,9 @@ function AddProduct() {
       if (!response.ok) {
         throw new Error('Failed to upload image');
       }
-
+      
       const data = await response.json();
+      console.log(data.fileUrl);
       setImageUrl(data.fileUrl); // Store the returned file URL in the state
     } catch (error) {
       console.error('Image upload failed:', error);

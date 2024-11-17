@@ -1,3 +1,4 @@
+const { type } = require('@testing-library/user-event/dist/type');
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
@@ -5,7 +6,7 @@ const productSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   quantity: { type: Number, required: true },
   expiryDate: { type: Date, required: false },
-  image: { type: String, required: false},
+  image: {type:String , required:true},
   category: { type: String, required: true },
   sellerId: { type: String, required: true }, // Ensure sellerId is included
 });

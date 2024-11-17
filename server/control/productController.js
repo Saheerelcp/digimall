@@ -2,7 +2,7 @@ const Product = require('../model/Product');
 
 // Add product function (already handled in route)
 exports.addProduct = async (req, res) => {
-  const { productName, price, quantity, expiryDate, image, category, sellerId } = req.body;
+  const { productName, price, quantity, expiryDate, image , category, sellerId } = req.body;
 
   try {
     const newProduct = new Product({
