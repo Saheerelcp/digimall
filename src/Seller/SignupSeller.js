@@ -47,9 +47,11 @@ const SignupSeller = () => {
 
       const data = await response.json();
       console.log('Signup successful:', data);
+      console.log(data.sellerId);
+      localStorage.setItem('sellerId', data.sellerId);
 
       // Store sellerId in localStorage (optional)
-      localStorage.setItem('sellerId', data.sellerId);
+      
 
       // Set a success message
       setSuccessMessage(`Congratulations, welcome to ${shopName}!`);

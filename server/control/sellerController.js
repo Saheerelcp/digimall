@@ -26,8 +26,8 @@ const signupSeller = async (req, res) => {
       shopAddress
     });
 
-    await newSeller.save();
-    res.status(201).json({ message: 'Seller registered successfully!' });
+    const savedSeller = await newSeller.save();
+    res.status(201).json({ sellerId: savedSeller._id, message: 'Seller registered successfully!' });
 
   } catch (err) {
     console.error(err);

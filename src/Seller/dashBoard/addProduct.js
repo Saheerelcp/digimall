@@ -15,7 +15,7 @@ function AddProduct() {
 
   // Get the seller's ID from local storage
   const sellerId = localStorage.getItem('sellerId');
-
+  console.log(`where is this:${sellerId}`);
   // Function to determine quantity type (kg or items)
   const quantityType = (category, pdctQty) => {
     const weightCategories = ['groceries', 'vegetables', 'fruits', 'cakes', 'bakery'];

@@ -13,7 +13,7 @@ import ResetPassword from './components/resetPassword';
 import Dashboard from './Seller/sellerDashboard';
 import AddProduct from './Seller/dashBoard/addProduct';
 import ProductCategories from './Seller/dashBoard/productCategories';
-
+import CustomerDashboard from './Customer/dashboard/customerDashboard';
 import './styles/LoginOptions.css';  
 import './styles/Signup.css';
 import './styles/SignupSeller.css';
@@ -21,7 +21,7 @@ import './styles/SignupCustomer.css';
 import './styles/SellerLogin.css'; 
 import './styles/sellerDashboard.css';
 import './styles/addProduct.css';
-
+import './styles/customerDashboard.css';
 
 function App() {
   return (
@@ -40,7 +40,7 @@ function App() {
           <Route path="/seller-dashboard" element={<Dashboard />} />
           <Route path="/add-product/:category" element={<AddProduct />} />
           <Route path="/product-categories" element={<ProductCategories />} />
-         
+          <Route path="/customer-dashboard" element={<CustomerDashboard/>} />
         </Routes>
       </div>
     </Router>

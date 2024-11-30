@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const sellerController = require('../control/sellerController');
+const Seller=require('../model/Seller');
 
 // Route for seller signup
 router.post('/SignupSeller', sellerController.signupSeller);
@@ -26,4 +27,15 @@ router.get('/seller-id/:email', async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
+// Route to fetch all seller details
+router.get("/sellers", async (req, res) => {
+    try {
+      const sellers = await Seller.find({});
+      res.status(200).json(sellers);
+    } catch (error) {
+      console.error("Error fetching sellers:", error);
+      res.status(500).json({ error: "Failed to fetch seller details" });
+    }
+  });
 module.exports = router;
