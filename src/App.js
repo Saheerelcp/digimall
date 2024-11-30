@@ -14,6 +14,7 @@ import Dashboard from './Seller/sellerDashboard';
 import AddProduct from './Seller/dashBoard/addProduct';
 import ProductCategories from './Seller/dashBoard/productCategories';
 import CustomerDashboard from './Customer/dashboard/customerDashboard';
+import ShopPage from './Customer/dashboard/shopPage';
 import './styles/LoginOptions.css';  
 import './styles/Signup.css';
 import './styles/SignupSeller.css';
@@ -22,7 +23,7 @@ import './styles/SellerLogin.css';
 import './styles/sellerDashboard.css';
 import './styles/addProduct.css';
 import './styles/customerDashboard.css';
-
+import './styles/shopPage.css' ;
 function App() {
   return (
     <Router>
@@ -41,6 +42,8 @@ function App() {
           <Route path="/add-product/:category" element={<AddProduct />} />
           <Route path="/product-categories" element={<ProductCategories />} />
           <Route path="/customer-dashboard" element={<CustomerDashboard/>} />
+          <Route path="/shop/:sellerId" element={<ShopPage />} />
+
         </Routes>
       </div>
     </Router>
