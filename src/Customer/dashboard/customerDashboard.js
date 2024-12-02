@@ -47,7 +47,7 @@ const CustomerDashboard = () => {
           <button className="search-btn">Search</button>
         </div>
         <div className="header-right">
-          <FaShoppingCart className="icon cart-icon" />
+          
           <FaUser className="icon profile-icon" />
         </div>
       </header>
@@ -59,7 +59,7 @@ const CustomerDashboard = () => {
             <img src={seller.shopIcon || "/default-shop-icon.png"} alt="Shop Icon" className="shop-icon" />
             <h3>{seller.shopName}</h3>
             <p>Seller: {seller.sellerName}</p>
-            <p>Contact: {seller.contactNo}</p>
+            <p>Contact: {seller.contactNumber}</p>
             <div className="shop-actions">
               
               <button

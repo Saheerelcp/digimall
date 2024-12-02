@@ -1,33 +1,39 @@
 const Customer = require('../model/Customer');
 
 // Function to handle customer sign-up (with Email)
-const signupCustomer = (req, res) => {
-  const { password, email } = req.body; // Only take email and password
+const signupCustomer = async (req, res) => {
+  const { email, password } = req.body; // Only take email and password
 
   // Validate input fields
-  if (!password || !email) {
+  if (!email || !password) {
     return res.status(400).json({ error: 'Both email and password are required' });
   }
 
-  // Create a new customer instance, including the email
-  const newCustomer = new Customer({
-    password,  // Save password (consider hashing in real-world scenarios)
-    email,     // Save email in the customer document
-  });
+  try {
+    // Check if the email already exists in the database
+    const existingCustomerByEmail = await Customer.findOne({ email });
+    if (existingCustomerByEmail) {
+      return res.status(400).json({ error: 'Email already associated with another customer' });
+    }
 
-  newCustomer.save()
-    .then(() => {
-      res.status(201).json({ message: 'Customer registered successfully' });
-    })
-    .catch(err => {
-      if (err.code === 11000) {
-        // Handle duplicate email error
-        res.status(400).json({ error: 'Email is already taken' });
-      } else {
-        res.status(500).json({ error: 'Internal server error' });
-      }
+    // Create a new customer instance with the provided details
+    const newCustomer = new Customer({
+      email,
+      password, // Save password (consider hashing in real-world scenarios)
     });
+
+    // Save the customer to the database
+    const savedCustomer = await newCustomer.save();
+
+    // Return the customerId and a success message
+    res.status(201).json({ customerId: savedCustomer._id, message: 'Customer registered successfully!' });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
+
 
 // Login controller function (only email and password)
 const loginCustomer = async (req, res) => {
@@ -48,7 +54,11 @@ const loginCustomer = async (req, res) => {
     }
 
     // If everything is correct, send success response
-    return res.status(200).send("Login successful.");
+    return res.status(200).json({
+      message: "Login successful.",
+      customerId: customer._id // Include sellerId in the response
+    });
+
   } catch (error) {
     console.error(error);
     return res.status(500).send("An error occurred. Please try again.");

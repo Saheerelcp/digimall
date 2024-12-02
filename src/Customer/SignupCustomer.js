@@ -34,6 +34,11 @@ const SignupCustomer = () => {
 
       const data = await response.json();
       console.log('Signup successful:', data);
+      console.log(`data and customerId:${data}`);
+      console.log(`what is in data:${data.customerId}`);
+
+      // Store customerId in localStorage (or any other state management approach)
+      localStorage.setItem('customerId', data.customerId);
 
       // Redirect to login page after successful signup
       navigate('/customer-login');

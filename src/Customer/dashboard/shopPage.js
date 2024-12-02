@@ -1,28 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { FaShoppingCart } from "react-icons/fa"; // Import the cart icon
+import "../../styles/shopPage.css";
 
 const ShopPage = () => {
-  const { sellerId } = useParams(); // Get the seller ID from the URL
-  const [products, setProducts] = useState([]); // Store fetched products
-  const [searchQuery, setSearchQuery] = useState(""); // Store the search query
+  const navigate = useNavigate();
+  const { sellerId } = useParams();
+  const [products, setProducts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Log to check the sellerId
-  console.log(`Seller ID from URL: ${sellerId}`);
+  const customerId = localStorage.getItem("customerId");
 
-  // Fetch products for the specific seller
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`http://localhost:5129/api/sellers/products/${sellerId}`);
+        const response = await fetch(
+          `http://localhost:5129/api/sellers/products/${sellerId}`
+        );
         const data = await response.json();
-        console.log("Fetched Products:", data); // Log to see what data we have
         if (response.ok) {
           setProducts(data);
         } else {
-          console.error('Error fetching products:', data.message);
+          console.error("Error fetching products:", data.message);
         }
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
       }
     };
 
@@ -31,25 +33,61 @@ const ShopPage = () => {
     }
   }, [sellerId]);
 
-  // Filter products based on the search query, ensuring product.productName is defined
-  const filteredProducts = products.filter(product =>
-    product.productName && product.productName.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredProducts = products.filter((product) =>
+    product.productName &&
+    product.productName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Handle Add to Cart
-  const handleAddToCart = (product) => {
-    console.log('Added to cart:', product);
-    // Add to cart logic here
+  const handleAddToCart = async (product) => {
+    try {
+      const response = await fetch("http://localhost:5129/api/cart/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          customerId,
+          product: {
+            productId: product._id,
+            name: product.productName,
+            price: product.price,
+            quantity: 1,
+            category:product.category,
+            image: product.image,
+            shopName: product.shopName,
+          },
+          sellerId: product.sellerId,
+        }),
+      });
+
+      if (response.ok) {
+        alert("Product added to cart!");
+        navigate(`/cart/${customerId}`);
+      } else {
+        const error = await response.json();
+        alert(`Failed to add product to cart: ${error.message}`);
+      }
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      alert("An error occurred while adding the product to the cart.");
+    }
   };
 
-  // Handle Buy Now
   const handleBuyNow = (product) => {
-    console.log('Buy now:', product);
-    // Handle buy now logic here
+    
+    console.log("Buy now:", product);
   };
-  
+
   return (
     <div className="shop-page">
+      {/* Header */}
+      <header className="shop-header">
+        <h1>Shop</h1>
+        <div className="cart-icon" onClick={() => navigate(`/cart/${customerId}`)}>
+          <FaShoppingCart size={24} />
+        </div>
+      </header>
+
       {/* Search Bar */}
       <div className="search-bar">
         <input
@@ -60,24 +98,26 @@ const ShopPage = () => {
         />
       </div>
 
-      {/* Display Search Results */}
+      {/* Products */}
       {searchQuery && filteredProducts.length > 0 && (
         <div className="search-results">
           <h2>Search Results</h2>
           <div className="product-list">
             {filteredProducts.map((product) => (
               <div key={product._id} className="product-card">
-                <img 
-                  src={product.image || "/default-product-image.png"} 
-                  alt={product.productName} 
+                <img
+                  src={product.image || "/default-product-image.png"}
+                  alt={product.productName}
                   className="product-image"
                 />
                 <div className="product-details">
-                  <h3>{product.productName}</h3> {/* Changed 'name' to 'productName' */}
+                  <h3>{product.productName}</h3>
                   <p>Price: ${product.price}</p>
                   <p>Quantity: {product.quantity}</p>
                   <div className="product-actions">
-                    <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
+                    <button onClick={() => handleAddToCart(product)}>
+                      Add to Cart
+                    </button>
                     <button onClick={() => handleBuyNow(product)}>Buy Now</button>
                   </div>
                 </div>
@@ -87,37 +127,31 @@ const ShopPage = () => {
         </div>
       )}
 
-      {/* Display All Products if No Search Query or No Matches */}
       {(!searchQuery || filteredProducts.length === 0) && (
         <div className="all-products">
           <h2>All Products</h2>
           <div className="product-list">
             {products.map((product) => (
               <div key={product._id} className="product-card">
-                <img 
-                  src={product.image || "/default-product-image.png"} 
-                  alt={product.productName} 
+                <img
+                  src={product.image || "/default-product-image.png"}
+                  alt={product.productName}
                   className="product-image"
                 />
                 <div className="product-details">
-                  <h3>{product.productName}</h3> {/* Changed 'name' to 'productName' */}
+                  <h3>{product.productName}</h3>
                   <p>Price: ${product.price}</p>
                   <p>Quantity: {product.quantity}</p>
                   <div className="product-actions">
-                    <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
+                    <button onClick={() => handleAddToCart(product)}>
+                      Add to Cart
+                    </button>
                     <button onClick={() => handleBuyNow(product)}>Buy Now</button>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      )}
-
-      {/* No products found */}
-      {searchQuery && filteredProducts.length === 0 && (
-        <div className="no-results">
-          <p>No products found for your search.</p>
         </div>
       )}
     </div>
