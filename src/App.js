@@ -16,16 +16,20 @@ import ProductCategories from './Seller/dashBoard/productCategories';
 import CustomerDashboard from './Customer/dashboard/customerDashboard';
 import ShopPage from './Customer/dashboard/shopPage';
 import CartPage from './Customer/dashboard/cartPage';
-import './styles/LoginOptions.css';  
+import Checkout from './Customer/dashboard/checkOut';
+
+import './styles/LoginOptions.css';
 import './styles/Signup.css';
 import './styles/SignupSeller.css';
 import './styles/SignupCustomer.css';
-import './styles/SellerLogin.css'; 
+import './styles/SellerLogin.css';
 import './styles/sellerDashboard.css';
 import './styles/addProduct.css';
 import './styles/customerDashboard.css';
-import './styles/shopPage.css' ;
-import './styles/cartPage.css' ;
+import './styles/shopPage.css';
+import './styles/cartPage.css';
+import './styles/checkout.css';
+
 function App() {
   return (
     <Router>
@@ -43,9 +47,12 @@ function App() {
           <Route path="/seller-dashboard" element={<Dashboard />} />
           <Route path="/add-product/:category" element={<AddProduct />} />
           <Route path="/product-categories" element={<ProductCategories />} />
-          <Route path="/customer-dashboard" element={<CustomerDashboard/>} />
+          <Route path="/customer-dashboard" element={<CustomerDashboard />} />
           <Route path="/shop/:sellerId" element={<ShopPage />} />
           <Route path="/cart/:customerId" element={<CartPage />} />
+          <Route path="/checkout" element={<Checkout />} />
+          
+          
 
 
         </Routes>

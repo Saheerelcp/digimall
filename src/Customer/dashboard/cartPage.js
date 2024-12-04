@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "../../styles/cartPage.css";
 
 const CartPage = () => {
+  const navigate = useNavigate();
   const { customerId } = useParams(); // Get the customerID from the URL
   const [cartItems, setCartItems] = useState([]);
   const [totalCost, setTotalCost] = useState(0);
@@ -75,7 +76,7 @@ const CartPage = () => {
 
   const handleProceedToCheckout = () => {
     alert("Proceeding to checkout...");
-    // Add navigation to checkout page if needed
+    navigate("/checkout"); // Navigate to the AddressForm.js page
   };
   ///////////////
   
