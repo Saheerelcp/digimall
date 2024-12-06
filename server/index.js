@@ -34,6 +34,8 @@ const uploadRoutes = require('./router/uploadRoutes');
 const ratingRoutes=require('./router/ratingRoutes');
 const cartRoutes=require('./router/cartRoutes');
 const checkoutRoutes=require('./router/checkoutRoutes');
+const deliveryRoutes=require('./router/deliveryRoutes');
+const billRoutes=require('./router/billRoutes');
 // Use routes (ensure the /api prefix is used in frontend and backend consistently)
 app.use('/api', customerRoutes);
 app.use('/api', sellerRoutes);
@@ -45,7 +47,8 @@ app.use('/api', uploadRoutes);
 app.use('/api', ratingRoutes);
 app.use('/api',cartRoutes);
 app.use('/api', checkoutRoutes)
-
+app.use('/api',deliveryRoutes);
+app.use('/api',billRoutes);
 // Start the server
 
 const port = 5129;

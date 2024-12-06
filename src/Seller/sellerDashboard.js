@@ -10,6 +10,10 @@ const SellerDashboard = () => {
   const handleAddProductsClick = () => {
     navigate('/product-categories');
   };
+  const sellerId=localStorage.getItem("sellerId");
+  const handleCustomerBill = () => {
+    navigate(`/seller-bill/${sellerId}`);
+  }
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowPopup(false);
@@ -38,7 +42,7 @@ const SellerDashboard = () => {
           <FaCartPlus className="button-icon" />
           Add Products
         </button>
-        <button className="dashboard-button" >
+        <button className="dashboard-button" onClick={handleCustomerBill}>
           <FaReceipt className="button-icon" /> 
           Customer Bill
         </button>

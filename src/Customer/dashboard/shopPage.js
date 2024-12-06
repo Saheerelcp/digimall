@@ -62,7 +62,7 @@ const ShopPage = () => {
 
       if (response.ok) {
         alert("Product added to cart!");
-        navigate(`/cart/${customerId}`);
+        navigate(`/cart/${customerId}/${sellerId}`);
       } else {
         const error = await response.json();
         alert(`Failed to add product to cart: ${error.message}`);

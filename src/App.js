@@ -17,7 +17,8 @@ import CustomerDashboard from './Customer/dashboard/customerDashboard';
 import ShopPage from './Customer/dashboard/shopPage';
 import CartPage from './Customer/dashboard/cartPage';
 import Checkout from './Customer/dashboard/checkOut';
-
+import CustomerDeliveryUpdates from './Customer/dashboard/customerDelivery';
+import SellerBills from './Seller/dashBoard/sellerBill';
 import './styles/LoginOptions.css';
 import './styles/Signup.css';
 import './styles/SignupSeller.css';
@@ -29,7 +30,8 @@ import './styles/customerDashboard.css';
 import './styles/shopPage.css';
 import './styles/cartPage.css';
 import './styles/checkout.css';
-
+import './styles/deliveryUpdates.css';
+import './styles/sellerBills.css';
 function App() {
   return (
     <Router>
@@ -49,8 +51,10 @@ function App() {
           <Route path="/product-categories" element={<ProductCategories />} />
           <Route path="/customer-dashboard" element={<CustomerDashboard />} />
           <Route path="/shop/:sellerId" element={<ShopPage />} />
-          <Route path="/cart/:customerId" element={<CartPage />} />
+          <Route path="/cart/:customerId/:sellerId" element={<CartPage />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/delivery-updates/:customerId" element={<CustomerDeliveryUpdates/>} />
+          <Route path="/seller-bill/:sellerId" element={<SellerBills/>} />
           
           
 

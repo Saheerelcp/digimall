@@ -1,0 +1,56 @@
+.delivery-updates-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .bill-button-container {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .bill-button {
+    background-color: green;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .bill-button:hover {
+    background-color: darkgreen;
+  }
+  
+  .order-details-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .timeline-item {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+  }
+  
+  .timeline-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border-radius: 50%;
+    background-color: gray;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .timeline-item.active .timeline-icon {
+    background-color: green;
+  }
+  

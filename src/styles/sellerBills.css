@@ -1,0 +1,46 @@
+/* SellerBills.css */
+.seller-bills {
+    padding: 20px;
+  }
+  
+  .bill-details {
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 20px;
+  }
+  
+  .customer-info p {
+    margin: 5px 0;
+    font-size: 16px;
+  }
+  
+  .customer-info p strong {
+    font-weight: bold;
+  }
+  
+  .divider {
+    border-top: 2px solid #ddd;
+    margin: 20px 0;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  table th, table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  table th {
+    background-color: #f4f4f4;
+  }
+  
+  table tfoot td {
+    font-weight: bold;
+    background-color: #f9f9f9;
+  }
+  

@@ -21,6 +21,7 @@ const Checkout = () => {
   const steps = ["Address Details", "Payment Gateway"]; // Steps definition
 
   const customerId = localStorage.getItem("customerId"); // Fetch customer ID from localStorage
+  const sellerId = localStorage.getItem("sellerId"); // Fetch customer ID from localStorage
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -66,17 +67,62 @@ const Checkout = () => {
     if (step > 0) setStep(step - 1);
   };
 
-  const handlePaymentSubmit = (e) => {
+  const handlePaymentSubmit = async (e) => {
     e.preventDefault();
+    
     if (paymentMethod) {
-      alert("Payment successful!");
-      // Order placed after payment confirmation
-      alert("Order placed successfully!");
-      navigate("/customer-bill"); // Navigate to confirmation page
+      try {
+        // Fetch the cart data for the given customer
+        const cartResponse = await fetch(`http://localhost:5129/api/cart/${customerId}`);
+        const cartData = await cartResponse.json();
+  
+        if (!cartData || !cartData.items || cartData.items.length === 0) {
+          return alert("No items in the cart.");
+        }
+  
+        // Prepare the order items from the cart data
+        const orderItems = cartData.items.map(item => ({
+          productName: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          expiryDate: item.expiryDate, // You may want to add expiry date to the cart schema if necessary
+          amount: item.price * item.quantity,
+        }));
+  
+        const totalAmount = orderItems.reduce((total, item) => total + item.amount, 0);
+  
+        // Make the API call to create the customer bill
+        const response = await fetch("http://localhost:5129/api/create-customer-bill", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            customerId, // Use the actual customer ID
+            sellerId,   // Use the actual seller ID
+            items: orderItems,
+            totalAmount,
+          }),
+        });
+  
+        const data = await response.json();
+  
+        if (response.ok) {
+          alert("Payment successful!");
+          alert("Order placed successfully!");
+          navigate(`/delivery-updates/${customerId}`); // Navigate to the confirmation page
+        } else {
+          alert(data.message || "Something went wrong.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("An error occurred. Please try again.");
+      }
     } else {
       alert("Please select a payment method.");
     }
   };
+  
 
   return (
     <form onSubmit={handlePaymentSubmit} className="checkout-form">

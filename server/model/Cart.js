@@ -1,22 +1,19 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose');
 
-const cartSchema = new Schema({
-  customerId: { 
-    type: Schema.Types.ObjectId, // Use ObjectId to reference another document
-    ref: "Customer",            // Reference the Customer model
-    required: true 
-  },
+const cartSchema = new mongoose.Schema({
+  customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer' },
+  sellerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Seller' },
   items: [
     {
-      productId: String,
+      productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
       name: String,
       price: Number,
-      quantity: Number,
+      quantity: { type: Number, default: 1 },
       image: String,
-      category:String,
+      category: String,
     },
   ],
+  createdAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("Cart", cartSchema);

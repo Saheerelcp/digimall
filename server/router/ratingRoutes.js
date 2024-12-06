@@ -9,7 +9,7 @@ router.get('/sellers/products/:sellerId', async (req, res) => {
     try {
       // Fetch products where the sellerId matches the sellerId parameter
       const products = await Product.find({ sellerId });
-      console.log(`products:${products}`);
+      
       // If no products are found, return a message
       if (products.length === 0) {
         return res.status(404).json({ message: 'No products found for this seller' });
