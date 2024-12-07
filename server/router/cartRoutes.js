@@ -17,8 +17,10 @@ router.post("/cart/add", async (req, res) => {
     }
 
     // Check if the product already exists in the cart from this seller
-    const existingItem = cart.items.find((item) => item.productId === product.productId);
-
+    const existingItem = cart.items.find((item) => {
+      return item.productId.toString() === product.productId.toString();
+    });
+    console.log(existingItem);
     if (existingItem) {
       // If the product exists, update the quantity
       existingItem.quantity += product.quantity;

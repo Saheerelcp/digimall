@@ -1,13 +1,33 @@
 /* SellerBills.css */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  overflow-x: hidden; /* Prevent horizontal overflow */
+}
+
 .seller-bills {
-    padding: 20px;
-  }
+  padding: 20px;
+  max-width: 1200px; /* Optional: Center content */
+  margin: 0 auto; /* Center the content horizontally */
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
   
-  .bill-details {
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    padding: 20px;
-  }
+.bill-details {
+  max-height: 400px; /* Limit the height of each bill */
+  overflow-y: auto; /* Enable vertical scrolling for the bill */
+  margin-bottom: 20px; /* Add spacing between bills */
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px; /* Optional: rounded corners */
+  background-color: #fff; /* Optional: ensure a clean background */
+}
+
   
   .customer-info p {
     margin: 5px 0;
@@ -23,24 +43,30 @@
     margin: 20px 0;
   }
   
+  .table-container {
+    overflow-x: auto; /* Enable horizontal scrolling */
+    margin-bottom: 20px; /* Add some space below the table */
+  }
+  
   table {
-    width: 100%;
+    width: 100%; /* Ensure the table stretches properly */
     border-collapse: collapse;
-    margin-top: 20px;
   }
   
-  table th, table td {
-    padding: 10px;
+  th, td {
     text-align: left;
-    border: 1px solid #ddd;
+    padding: 8px;
+    border: 1px solid #ddd; /* Optional: for better readability */
   }
   
-  table th {
-    background-color: #f4f4f4;
+  th {
+    background-color: #f2f2f2;
   }
   
-  table tfoot td {
-    font-weight: bold;
-    background-color: #f9f9f9;
+  .seller-bills-container {
+    max-height: 80vh; /* Adjust to limit the visible area */
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding: 10px;
+    border: 1px solid #ccc; /* Optional: for better visibility */
   }
   

@@ -36,6 +36,7 @@ const SellerBills = () => {
   if (loading) return <p>Loading...</p>;
 
   return (
+    <div className="seller-bills-container">
     <div className="seller-bills">
       <h2>Customer Bills</h2>
       {bills.length > 0 ? (
@@ -55,6 +56,7 @@ const SellerBills = () => {
               <hr className="divider" />
 
               {/* Product Details Table */}
+              <div className="table-container">
               <table>
                 <thead>
                   <tr>
@@ -83,12 +85,14 @@ const SellerBills = () => {
                   </tr>
                 </tfoot>
               </table>
+              </div>
             </div>
           ))}
         </div>
       ) : (
         <p>No bills available for this seller.</p>
       )}
+    </div>
     </div>
   );
 };
