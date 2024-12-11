@@ -19,6 +19,7 @@ import CartPage from './Customer/dashboard/cartPage';
 import Checkout from './Customer/dashboard/checkOut';
 import CustomerDeliveryUpdates from './Customer/dashboard/customerDelivery';
 import SellerBills from './Seller/dashBoard/sellerBill';
+import CustomerProfile from './Customer/dashboard/customerProfile';
 import './styles/LoginOptions.css';
 import './styles/Signup.css';
 import './styles/SignupSeller.css';
@@ -32,6 +33,7 @@ import './styles/cartPage.css';
 import './styles/checkout.css';
 import './styles/deliveryUpdates.css';
 import './styles/sellerBills.css';
+import './styles/customerProfile.css';
 function App() {
   return (
     <Router>
@@ -55,10 +57,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/delivery-updates/:customerId" element={<CustomerDeliveryUpdates/>} />
           <Route path="/seller-bill/:sellerId" element={<SellerBills/>} />
-          
-          
-
-
+          <Route path="/customer-profile" element={<CustomerProfile/>} />
         </Routes>
       </div>
     </Router>

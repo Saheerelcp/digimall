@@ -105,6 +105,27 @@ router.get("/seller-bills/:sellerId", async (req, res) => {
     }
 });
 
-
+router.patch("/update-bill/:billId", async (req, res) => {
+    const { billId } = req.params;
+    const { expectedDelivery, status } = req.body;
+    console.log(`bill id:${billId}`);
+    try {
+      const bill = await CustomerBill.findByIdAndUpdate(
+        billId,
+        { expectedDelivery, status },
+        { new: true }
+      );
+  
+      if (!bill) {
+        return res.status(404).json({ message: "Bill not found." });
+      }
+  
+      res.status(200).json({ message: "Bill updated successfully.", bill });
+    } catch (error) {
+      console.error("Error updating bill:", error);
+      res.status(500).json({ message: "Internal server error." });
+    }
+  });
+  
 
 module.exports = router;

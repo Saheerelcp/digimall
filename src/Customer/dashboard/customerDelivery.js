@@ -7,7 +7,9 @@ const CustomerDeliveryUpdates = () => {
   const [orderDetails, setOrderDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-    console.log(`what is customerId:${customerId}`);
+
+  console.log(`Customer ID: ${customerId}`);
+
   useEffect(() => {
     // Fetch delivery updates using customerId
     const fetchOrderDetails = async () => {
@@ -30,8 +32,15 @@ const CustomerDeliveryUpdates = () => {
     }
   }, [customerId]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div>Loading delivery updates...</div>;
+  if (error) return <div>Sorry, we couldn't load the delivery updates. Please try again later.</div>;
+
+  const deliveryStatuses = [
+    "Order sent to seller",
+    "Order ready for delivery",
+    "Out for delivery",
+    "Delivered successfully",
+  ];
 
   return (
     <div className="delivery-updates-container">
@@ -48,27 +57,27 @@ const CustomerDeliveryUpdates = () => {
       <div className="order-details-header">
         <h2>Delivery Updates</h2>
         <p>Customer ID: {customerId}</p>
-        <p>Expected Delivery: {new Date(orderDetails.expectedDelivery).toLocaleDateString()}</p>
+        <p>
+          Expected Delivery:{" "}
+          {orderDetails.expectedDelivery
+            ? new Date(orderDetails.expectedDelivery).toLocaleDateString()
+            : "Not available"}
+        </p>
       </div>
 
       {/* Delivery Timeline */}
       <div className="timeline">
-        <div className={`timeline-item ${orderDetails.status === "Order sent to seller" ? "active" : ""}`}>
-          <span className="timeline-icon">&#10004;</span>
-          <p>Order sent to seller</p>
-        </div>
-        <div className={`timeline-item ${orderDetails.status === "Order ready for delivery" ? "active" : ""}`}>
-          <span className="timeline-icon">&#10004;</span>
-          <p>Order ready for delivery</p>
-        </div>
-        <div className={`timeline-item ${orderDetails.status === "Out for delivery" ? "active" : ""}`}>
-          <span className="timeline-icon">&#10004;</span>
-          <p>Out for delivery</p>
-        </div>
-        <div className={`timeline-item ${orderDetails.status === "Delivered successfully" ? "active" : ""}`}>
-          <span className="timeline-icon">&#10004;</span>
-          <p>Delivered successfully</p>
-        </div>
+        {deliveryStatuses.map((status, index) => (
+          <div
+            key={index}
+            className={`timeline-item ${
+              deliveryStatuses.indexOf(orderDetails.status) >= index ? "active" : ""
+            }`}
+          >
+            <span className="timeline-icon">&#10004;</span>
+            <p>{status}</p>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import "../../styles/customerDashboard.css";
 
 const CustomerDashboard = () => {
   const [sellers, setSellers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Fetch seller data from the backend
   useEffect(() => {
@@ -28,6 +30,11 @@ const CustomerDashboard = () => {
     seller.shopName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Handle profile icon click
+  const handleProfileClick = () => {
+    navigate("/customer-profile"); // Navigate to CustomerProfile page
+  };
+
   return (
     <div className="customer-dashboard">
       {/* Header */}
@@ -47,8 +54,10 @@ const CustomerDashboard = () => {
           <button className="search-btn">Search</button>
         </div>
         <div className="header-right">
-          
-          <FaUser className="icon profile-icon" />
+          <FaUser
+            className="icon profile-icon"
+            onClick={handleProfileClick} // Call handleProfileClick when clicked
+          />
         </div>
       </header>
 
@@ -56,12 +65,15 @@ const CustomerDashboard = () => {
       <section className="shops-section">
         {filteredSellers.map((seller) => (
           <div className="shop-block" key={seller._id}>
-            <img src={seller.shopIcon || "/default-shop-icon.png"} alt="Shop Icon" className="shop-icon" />
+            <img
+              src={seller.shopIcon || "/default-shop-icon.png"}
+              alt="Shop Icon"
+              className="shop-icon"
+            />
             <h3>{seller.shopName}</h3>
             <p>Seller: {seller.sellerName}</p>
             <p>Contact: {seller.contactNumber}</p>
             <div className="shop-actions">
-              
               <button
                 className="shop-now-btn"
                 onClick={() => handleShopNow(seller._id)}

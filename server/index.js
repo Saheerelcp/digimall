@@ -11,7 +11,7 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: 'http://localhost:3001', // Update this to match your frontend URL
-  methods: ['POST', 'GET','DELETE'],
+  methods: ['POST', 'GET','DELETE','PATCH'],
   credentials: true
 }));
 

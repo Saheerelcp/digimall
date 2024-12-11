@@ -14,6 +14,14 @@ const CustomerBillSchema = new mongoose.Schema({
     },
   ],
   totalAmount: { type: Number, required: true },
+  status: { type: String}, // Example: "Order sent to seller", "Out for delivery", etc.
+  expectedDelivery: { type: Date },
+  timestamps: {
+    sentToSeller: { type: Date },
+    readyForDelivery: { type: Date },
+    outForDelivery: { type: Date },
+    delivered: { type: Date },
+  },
 });
 
 module.exports = mongoose.model("CustomerBill", CustomerBillSchema);
