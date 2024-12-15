@@ -74,7 +74,7 @@ const SellerBills = () => {
                   <p><strong>Customer Name:</strong> {bill.customerName}</p>
                   <p><strong>Customer Address:</strong> {bill.customerAddress}</p>
                   <p><strong>Order Date:</strong> {new Date(bill.orderDate).toLocaleString()}</p>
-                  <p><strong>Shop Name:</strong> {bill.shopName}</p>
+
                 </div>
 
                 <hr className="divider" />
@@ -114,7 +114,7 @@ const SellerBills = () => {
                   <label>
                     Expected Delivery:
                     <input
-                      type="date"
+                      type="datetime-local"
                       value={bill.expectedDelivery || ""}
                       onChange={(e) =>
                         setBills((prevBills) =>
@@ -165,6 +165,7 @@ const SellerBills = () => {
                     Update Bill
                   </button>
                 </div>
+
               </div>
             ))}
           </div>

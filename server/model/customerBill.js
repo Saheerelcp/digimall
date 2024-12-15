@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const CustomerBillSchema = new mongoose.Schema({
   customerId: { type: mongoose.Schema.Types.ObjectId, ref: "Customer", required: true },
   sellerId: { type: mongoose.Schema.Types.ObjectId, ref: "Seller", required: true },
+  
   orderDate: { type: Date, default: Date.now },
   items: [
     {

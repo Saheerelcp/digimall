@@ -20,6 +20,7 @@ import Checkout from './Customer/dashboard/checkOut';
 import CustomerDeliveryUpdates from './Customer/dashboard/customerDelivery';
 import SellerBills from './Seller/dashBoard/sellerBill';
 import CustomerProfile from './Customer/dashboard/customerProfile';
+import ProfileIcon from './Customer/dashboard/profileIcon';
 import './styles/LoginOptions.css';
 import './styles/Signup.css';
 import './styles/SignupSeller.css';
@@ -34,6 +35,7 @@ import './styles/checkout.css';
 import './styles/deliveryUpdates.css';
 import './styles/sellerBills.css';
 import './styles/customerProfile.css';
+import './styles/profileIcon.css';
 function App() {
   return (
     <Router>
@@ -57,7 +59,8 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/delivery-updates/:customerId" element={<CustomerDeliveryUpdates/>} />
           <Route path="/seller-bill/:sellerId" element={<SellerBills/>} />
-          <Route path="/customer-profile" element={<CustomerProfile/>} />
+          <Route path="/customer-profile/:customerId" element={<CustomerProfile/>} />
+          <Route path="/profile-icon" element={<ProfileIcon/>} />
         </Routes>
       </div>
     </Router>

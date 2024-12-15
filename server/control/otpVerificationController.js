@@ -18,6 +18,8 @@ const verifyOtp = async (req, res) => {
     }
 
     // Validate OTP and expiration
+    console.log(`otp${otp}`);
+    console.log(`user otp:${user.otp}`);
     if (user.otp !== otp) {
       return res.status(400).json({ error: 'Invalid OTP.' });
     }

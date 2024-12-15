@@ -29,10 +29,10 @@ const CustomerDashboard = () => {
   const filteredSellers = sellers.filter((seller) =>
     seller.shopName.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
+  
   // Handle profile icon click
   const handleProfileClick = () => {
-    navigate("/customer-profile"); // Navigate to CustomerProfile page
+    navigate(`/profile-icon`); // Navigate to CustomerProfile page
   };
 
   return (

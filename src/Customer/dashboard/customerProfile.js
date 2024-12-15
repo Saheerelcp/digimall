@@ -8,12 +8,20 @@ const CustomerProfile = () => {
   useEffect(() => {
     // Fetch delivery updates for the customer
     const fetchDeliveryUpdates = async () => {
-        const customerId = localStorage.getItem("customerId");
+      const customerId = localStorage.getItem("customerId");
       try {
         const response = await fetch(`http://localhost:5129/api/customer/delivery-updates/${customerId}`);
         const data = await response.json();
+        console.log(data.orders.orderId);
+        
         if (response.ok) {
-          setDeliveryUpdates(data.orders); // Update state with fetched orders
+          // Update state with fetched orders, including default values for missing fields
+          const updatedOrders = data.orders.map((order) => ({
+            ...order,
+            status: order.status || "Sent to Seller",
+            expectedDelivery: order.expectedDelivery || "Wait for Seller Response",
+          }));
+          setDeliveryUpdates(updatedOrders);
         } else {
           alert(data.message || "Failed to fetch delivery updates.");
         }
@@ -55,7 +63,8 @@ const CustomerProfile = () => {
                 <p><strong>Order ID:</strong> {update.orderId}</p>
                 <p><strong>Status:</strong> {update.status}</p>
                 <p><strong>Shop:</strong> {update.shopName}</p>
-                <p><strong>Expected Delivery:</strong> {new Date(update.expectedDelivery).toLocaleDateString()}</p>
+                <p><strong>Contact Number:</strong> {update.contactNumber || "Not Available"}</p>
+                <p><strong>Expected Delivery:</strong> {update.expectedDelivery}</p>
                 <button onClick={() => handleViewDetails(update._id)}>View Details</button>
               </div>
             ))}
