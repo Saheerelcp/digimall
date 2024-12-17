@@ -16,7 +16,7 @@ function ProfileIcon() {
         <div className="block" onClick={() => handleNavigate()}>
           <h2>Order Details</h2>
         </div>
-        <div className="block" onClick={() => navigate(`/saved-address/${customerId}`)}>
+        <div className="block" onClick={() => navigate(`/address-component/${customerId}`)}>
           <h2>Save Address</h2>
         </div>
         <div className="block" onClick={() => navigate('/contact-us')}>

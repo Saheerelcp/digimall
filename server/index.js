@@ -11,7 +11,7 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: 'http://localhost:3001', // Update this to match your frontend URL
-  methods: ['POST', 'GET','DELETE','PATCH'],
+  methods: ['POST', 'GET','DELETE','PATCH','PUT'],
   credentials: true
 }));
 
@@ -36,6 +36,7 @@ const cartRoutes=require('./router/cartRoutes');
 const checkoutRoutes=require('./router/checkoutRoutes');
 const deliveryRoutes=require('./router/deliveryRoutes');
 const billRoutes=require('./router/billRoutes');
+const addressRoutes = require('./router/addressRoutes');
 // Use routes (ensure the /api prefix is used in frontend and backend consistently)
 app.use('/api', customerRoutes);
 app.use('/api', sellerRoutes);
@@ -49,6 +50,7 @@ app.use('/api',cartRoutes);
 app.use('/api', checkoutRoutes)
 app.use('/api',deliveryRoutes);
 app.use('/api',billRoutes);
+app.use('/api',addressRoutes );
 // Start the server
 
 const port = 5129;

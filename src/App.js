@@ -21,6 +21,7 @@ import CustomerDeliveryUpdates from './Customer/dashboard/customerDelivery';
 import SellerBills from './Seller/dashBoard/sellerBill';
 import CustomerProfile from './Customer/dashboard/customerProfile';
 import ProfileIcon from './Customer/dashboard/profileIcon';
+import AddressComponent from './Customer/dashboard/addressComponent';
 import './styles/LoginOptions.css';
 import './styles/Signup.css';
 import './styles/SignupSeller.css';
@@ -36,6 +37,8 @@ import './styles/deliveryUpdates.css';
 import './styles/sellerBills.css';
 import './styles/customerProfile.css';
 import './styles/profileIcon.css';
+import './styles/addressComponent.css';
+
 function App() {
   return (
     <Router>
@@ -61,6 +64,8 @@ function App() {
           <Route path="/seller-bill/:sellerId" element={<SellerBills/>} />
           <Route path="/customer-profile/:customerId" element={<CustomerProfile/>} />
           <Route path="/profile-icon" element={<ProfileIcon/>} />
+          <Route path="/address-component/:customerId" element={<AddressComponent/>} />
+          
         </Routes>
       </div>
     </Router>

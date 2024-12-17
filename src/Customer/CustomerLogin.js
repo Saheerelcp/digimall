@@ -17,12 +17,13 @@ const CustomerLogin = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),  // Use email in the request
       });
-
+      const data = await response.json();
       if (!response.ok) {
         const message = await response.text();
         console.log("Error:", response.status, message);
         setErrorMessage(message);  // Display error message
       } else {
+        localStorage.setItem('customerId', data.customerId);
         // Redirect to the home page or another page after successful login
         navigate('/customer-dashboard');
       }
