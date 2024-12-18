@@ -2,6 +2,22 @@ const express = require("express");
 const router = express.Router();
 const Customer = require("../model/Customer");
 const CustomerBill = require("../model/customerBill");
+//fetch saved address
+router.get("/get-saved-addresses/:customerId", async (req, res) => {
+  try {
+    const { customerId } = req.params;
+    const customer = await Customer.findById(customerId);
+
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    res.status(200).json({ address: customer.address || [] });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 // Route to save or update address
 router.post("/save-address", async (req, res) => {

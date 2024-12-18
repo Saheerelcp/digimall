@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/checkout.css";
 
@@ -16,16 +16,42 @@ const Checkout = () => {
     state: "",
   });
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [savedAddresses, setSavedAddresses] = useState([]); // Store saved addresses
+  const [useSavedAddress, setUseSavedAddress] = useState(false); // Toggle between new or saved address
+  const [selectedAddress, setSelectedAddress] = useState(null); // Selected saved address
   const navigate = useNavigate();
 
-  const steps = ["Address Details", "Payment Gateway"]; // Steps definition
+  const steps = ["Address Details", "Payment Gateway"];
+  const customerId = localStorage.getItem("customerId");
+  const sellerId = localStorage.getItem("sellerId");
 
-  const customerId = localStorage.getItem("customerId"); // Fetch customer ID from localStorage
-  const sellerId = localStorage.getItem("sellerId"); // Fetch customer ID from localStorage
+  useEffect(() => {
+    // Fetch saved addresses for the customer
+    const fetchSavedAddresses = async () => {
+      try {
+        const response = await fetch(`http://localhost:5129/api/get-saved-addresses/${customerId}`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          setSavedAddresses(data.address || []);
+        } else {
+          console.error("Failed to fetch saved addresses.");
+        }
+      } catch (error) {
+        console.error("Error fetching saved addresses:", error.message);
+      }
+    };
+    fetchSavedAddresses();
+  }, [customerId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSavedAddressChange = (e) => {
+    const addressIndex = e.target.value;
+    setSelectedAddress(savedAddresses[addressIndex]);
   };
 
   const handlePaymentChange = (e) => {
@@ -34,10 +60,10 @@ const Checkout = () => {
 
   const handleNextStep = async () => {
     if (step === 0) {
-      // Submit address when moving from Step 0 to Step 1
+      const addressToSave = useSavedAddress ? selectedAddress : formData;
       const dataToSend = {
         customerId,
-        address: formData,
+        address: addressToSave,
       };
 
       try {
@@ -54,12 +80,12 @@ const Checkout = () => {
         }
 
         alert("Address saved successfully!");
-        setStep(step + 1); // Move to the next step only if address is saved
+        setStep(step + 1);
       } catch (error) {
         console.error("Error saving address:", error.message);
       }
     } else if (step === 1) {
-      setStep(step + 1); // Proceed to payment success confirmation step
+      setStep(step + 1);
     }
   };
 
@@ -69,48 +95,43 @@ const Checkout = () => {
 
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (paymentMethod) {
       try {
-        // Fetch the cart data for the given customer
         const cartResponse = await fetch(`http://localhost:5129/api/cart/${customerId}`);
         const cartData = await cartResponse.json();
-  
+
         if (!cartData || !cartData.items || cartData.items.length === 0) {
           return alert("No items in the cart.");
         }
-  
-        // Prepare the order items from the cart data
-        const orderItems = cartData.items.map(item => ({
+
+        const orderItems = cartData.items.map((item) => ({
           productName: item.name,
           quantity: item.quantity,
           price: item.price,
-          expiryDate: item.expiryDate, // You may want to add expiry date to the cart schema if necessary
           amount: item.price * item.quantity,
         }));
-  
+
         const totalAmount = orderItems.reduce((total, item) => total + item.amount, 0);
-  
-        // Make the API call to create the customer bill
+
         const response = await fetch("http://localhost:5129/api/create-customer-bill", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            customerId, // Use the actual customer ID
-            sellerId,   // Use the actual seller ID
+            customerId,
+            sellerId,
             items: orderItems,
             totalAmount,
           }),
         });
-  
+
         const data = await response.json();
-  
+
         if (response.ok) {
           alert("Payment successful!");
-          alert("Order placed successfully!");
-          navigate(`/delivery-updates/${customerId}`); // Navigate to the confirmation page
+          navigate(`/delivery-updates/${customerId}`);
         } else {
           alert(data.message || "Something went wrong.");
         }
@@ -122,74 +143,138 @@ const Checkout = () => {
       alert("Please select a payment method.");
     }
   };
-  
 
   return (
+    
     <form onSubmit={handlePaymentSubmit} className="checkout-form">
+      
       <h2>{steps[step]}</h2>
 
       {step === 0 && (
-        <div>
-          {Object.keys(formData).map((field) => (
-            <div key={field} className="form-group">
-              <label>{field.replace(/([A-Z])/g, " $1").toUpperCase()}</label>
-              <input
-                type="text"
-                name={field}
-                value={formData[field]}
-                onChange={handleInputChange}
-                required
-              />
+        <div className="step-0-container">
+          {savedAddresses.length > 0 && (
+            <div className="address-options">
+              <h3>Select a Saved Address or Enter a New Address</h3>
+              <div className="radio-group">
+                <label>
+                  <input
+                    type="radio"
+                    name="addressType"
+                    value="saved"
+                    onChange={() => setUseSavedAddress(true)}
+                  />
+                  Use Saved Address
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="addressType"
+                    value="new"
+                    onChange={() => setUseSavedAddress(false)}
+                    defaultChecked
+                  />
+                  Enter New Address
+                </label>
+              </div>
             </div>
-          ))}
+          )}
+
+          <div className="address-input-container">
+            {useSavedAddress && savedAddresses.length > 0 ? (
+              <div className="saved-address-list">
+                <h4>Select a Saved Address</h4>
+                {savedAddresses.map((address, index) => (
+                  <div key={index} className="saved-address-item">
+                    <input
+                      type="radio"
+                      name="savedAddress"
+                      value={index}
+                      onChange={handleSavedAddressChange}
+                    />
+                    <span>
+                      {address.fullName}, {address.houseNumber}, {address.area},{" "}
+                      {address.city}, {address.state} - {address.pinCode}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="new-address-form">
+                <h4>Enter Address Details</h4>
+                {Object.keys(formData).map((field) => (
+                  <div key={field} className="form-group-row">
+                    <label>{field.replace(/([A-Z])/g, " $1").toUpperCase()}</label>
+                    <input
+                      type="text"
+                      name={field}
+                      value={formData[field]}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
 
       {step === 1 && (
-        <div>
+        <div className="payment-container">
           <h3>Select Payment Method</h3>
-          <label>
-            <input
-              type="radio"
-              name="payment"
-              value="GPay"
-              checked={paymentMethod === "GPay"}
-              onChange={handlePaymentChange}
-            />
-            Google Pay
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="payment"
-              value="PhonePe"
-              checked={paymentMethod === "PhonePe"}
-              onChange={handlePaymentChange}
-            />
-            PhonePe
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="payment"
-              value="COD"
-              checked={paymentMethod === "COD"}
-              onChange={handlePaymentChange}
-            />
-            Cash on Delivery
-          </label>
+          <div className="payment-options">
+            <label>
+              <input
+                type="radio"
+                name="payment"
+                value="GPay"
+                checked={paymentMethod === "GPay"}
+                onChange={handlePaymentChange}
+              />
+              Google Pay
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="payment"
+                value="PhonePe"
+                checked={paymentMethod === "PhonePe"}
+                onChange={handlePaymentChange}
+              />
+              PhonePe
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="payment"
+                value="COD"
+                checked={paymentMethod === "COD"}
+                onChange={handlePaymentChange}
+              />
+              Cash on Delivery
+            </label>
+          </div>
         </div>
       )}
 
-      <div className="buttons">
-        {step > 0 && <button type="button" onClick={handlePreviousStep}>Back</button>}
+      <div className="buttons-row">
+        {step > 0 && (
+          <button type="button" className="back-btn" onClick={handlePreviousStep}>
+            Back
+          </button>
+        )}
         {step < steps.length - 1 ? (
-          <button type="button" onClick={handleNextStep}>Next</button>
+          <button type="button" className="next-btn" onClick={handleNextStep}>
+            Next
+          </button>
         ) : (
-          <button type="submit">Place Order</button>
+          <button type="submit" className="submit-btn">
+            Place Order
+          </button>
         )}
       </div>
     </form>
+
   );
 };
 
