@@ -1,0 +1,77 @@
+.expenses-container {
+    padding: 20px;
+    font-family: 'Arial, sans-serif';
+    text-align: center;
+  }
+  
+  .categories {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+  }
+  
+  .category {
+    width: 100px;
+    height: 100px;
+    background-color: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .category.selected {
+    border-color: #28a745;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .category:hover {
+    transform: scale(1.05);
+  }
+  
+  .category p {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .expense-input {
+    margin: 20px 0;
+  }
+  
+  .expense-input input {
+    padding: 10px;
+    font-size: 16px;
+    width: 200px;
+    margin-right: 10px;
+  }
+  
+  .expense-input button {
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .expense-input button:hover {
+    background-color: #218838;
+  }
+  
+  .graph-controls {
+    margin: 20px 0;
+  }
+  
+  .expenses-graph {
+    margin-top: 30px;
+  }
+  

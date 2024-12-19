@@ -22,6 +22,8 @@ import SellerBills from './Seller/dashBoard/sellerBill';
 import CustomerProfile from './Customer/dashboard/customerProfile';
 import ProfileIcon from './Customer/dashboard/profileIcon';
 import AddressComponent from './Customer/dashboard/addressComponent';
+import BudgetSection from './Seller/dashBoard/budgetSection';
+import Expenses from './Seller/dashBoard/expenses';
 import './styles/LoginOptions.css';
 import './styles/Signup.css';
 import './styles/SignupSeller.css';
@@ -38,6 +40,8 @@ import './styles/sellerBills.css';
 import './styles/customerProfile.css';
 import './styles/profileIcon.css';
 import './styles/addressComponent.css';
+import './styles/budgetSection.css';
+import './styles/expenses.css';
 
 function App() {
   return (
@@ -65,7 +69,9 @@ function App() {
           <Route path="/customer-profile/:customerId" element={<CustomerProfile/>} />
           <Route path="/profile-icon" element={<ProfileIcon/>} />
           <Route path="/address-component/:customerId" element={<AddressComponent/>} />
-          
+          <Route path="budget-section" element={<BudgetSection/>} />
+          <Route path="expenses-details" element={<Expenses/>} />
+
         </Routes>
       </div>
     </Router>

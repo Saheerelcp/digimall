@@ -14,6 +14,9 @@ const SellerDashboard = () => {
   const handleCustomerBill = () => {
     navigate(`/seller-bill/${sellerId}`);
   }
+  const handleBudget = () => {
+    navigate('/budget-section');
+  }
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowPopup(false);
@@ -46,7 +49,7 @@ const SellerDashboard = () => {
           <FaReceipt className="button-icon" /> 
           Customer Bill
         </button>
-        <button className="dashboard-button">
+        <button className="dashboard-button" onClick={handleBudget}>
           <FaMoneyBillWave className="button-icon" />
           Budget
         </button>

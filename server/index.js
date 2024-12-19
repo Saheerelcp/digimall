@@ -37,6 +37,7 @@ const checkoutRoutes=require('./router/checkoutRoutes');
 const deliveryRoutes=require('./router/deliveryRoutes');
 const billRoutes=require('./router/billRoutes');
 const addressRoutes = require('./router/addressRoutes');
+const expensesRoutes = require('./router/expensesRoutes');
 // Use routes (ensure the /api prefix is used in frontend and backend consistently)
 app.use('/api', customerRoutes);
 app.use('/api', sellerRoutes);
@@ -51,6 +52,7 @@ app.use('/api', checkoutRoutes)
 app.use('/api',deliveryRoutes);
 app.use('/api',billRoutes);
 app.use('/api',addressRoutes );
+app.use('/api', expensesRoutes);
 // Start the server
 
 const port = 5129;
