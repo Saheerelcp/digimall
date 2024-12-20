@@ -24,6 +24,7 @@ import ProfileIcon from './Customer/dashboard/profileIcon';
 import AddressComponent from './Customer/dashboard/addressComponent';
 import BudgetSection from './Seller/dashBoard/budgetSection';
 import Expenses from './Seller/dashBoard/expenses';
+import ProfitGraph from './Seller/dashBoard/profit';
 import './styles/LoginOptions.css';
 import './styles/Signup.css';
 import './styles/SignupSeller.css';
@@ -42,7 +43,7 @@ import './styles/profileIcon.css';
 import './styles/addressComponent.css';
 import './styles/budgetSection.css';
 import './styles/expenses.css';
-
+import './styles/profit.css';
 function App() {
   return (
     <Router>
@@ -71,7 +72,7 @@ function App() {
           <Route path="/address-component/:customerId" element={<AddressComponent/>} />
           <Route path="budget-section" element={<BudgetSection/>} />
           <Route path="expenses-details" element={<Expenses/>} />
-
+          <Route path="profit-details" element={<ProfitGraph/>} />
         </Routes>
       </div>
     </Router>

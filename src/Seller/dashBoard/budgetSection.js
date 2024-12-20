@@ -9,7 +9,9 @@ const BudgetSection = ({ onSelectBlock }) => {
   const handleExpenses = () => {
     navigate('/expenses-details'); // Correct usage of navigate with a path
   };
-
+  const handleProfit = () => {
+    navigate('/profit-details');
+  }
   return (
     <div className="budget-container">
       <h2>Budget Section</h2>
@@ -20,7 +22,7 @@ const BudgetSection = ({ onSelectBlock }) => {
         </div>
         <div
           className="budget-block"
-          onClick={() => onSelectBlock('profit')}
+          onClick={handleProfit}
         >
           <FaChartLine className="budget-icon" />
           <p className="budget-label">Profit</p>

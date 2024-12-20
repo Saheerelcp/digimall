@@ -1,0 +1,132 @@
+/* profit.css */
+.profit-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  h2 {
+    color: #333;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  h3 {
+    font-size: 20px;
+    color: #4CAF50; /* Green color for profit */
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    font-weight: 600;
+  }
+  
+  .profit-container select,
+  .profit-container input {
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 300px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .profit-container select:focus,
+  .profit-container input:focus {
+    border-color: #4CAF50;
+    outline: none;
+  }
+  
+  label {
+    font-size: 18px;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: block;
+  }
+  
+  .profit-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .profit-container .chart-container {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 800px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profit-container .chart-container canvas {
+    margin-top: 20px;
+  }
+  
+  .profit-container .period-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .profit-container .period-selector select {
+    max-width: 150px;
+  }
+  
+  .profit-container .period-selector label {
+    font-size: 16px;
+  }
+  
+  .profit-container .profit-amount {
+    font-size: 22px;
+    text-align: center;
+    font-weight: 600;
+    color: #4CAF50; /* Green for profit */
+  }
+  
+  .profit-container .loss-amount {
+    font-size: 22px;
+    text-align: center;
+    font-weight: 600;
+    color: #FF5733; /* Red for loss */
+  }
+  
+  .profit-container .input-group {
+    margin-top: 20px;
+  }
+  
+  .profit-container .input-group input {
+    margin-top: 10px;
+  }
+  
+  .profit-container .no-seller-id {
+    font-size: 18px;
+    color: red;
+    text-align: center;
+    margin-top: 30px;
+  }
+  /* Add these styles to your profit.css file */
+.profit-amount {
+    font-size: 22px;
+    text-align: center;
+    font-weight: 600;
+    color: #4CAF50; /* Green color for profit */
+  }
+  
+  .loss-amount {
+    font-size: 22px;
+    text-align: center;
+    font-weight: 600;
+    color: #FF5733; /* Red color for loss */
+  }
+  
