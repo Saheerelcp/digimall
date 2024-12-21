@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const CustomerBill = require("../model/customerBill"); // Your CustomerBill model
-const Order = require("../model/Order"); // Order model (if needed for tracking)
+const Order = require("../model/Order");
+const Product = require("../model/Product"); // Order model (if needed for tracking)
 const Cart = require("../model/Cart"); // Cart model
 // Fetch the cart for a specific customer
 router.get("/cart/:customerId", async (req, res) => {
@@ -19,6 +20,45 @@ router.get("/cart/:customerId", async (req, res) => {
     }
 });
 
+
+router.post('/purchase', async (req, res) => {
+    const { productId, purchasedQuantity } = req.body;
+    console.log(`product id:${productId}`)
+    try {
+      // Validate input
+      if (!productId || !purchasedQuantity) {
+        return res.status(400).json({ message: 'Product ID and purchased quantity are required' });
+      }
+  
+      // Find the product by ID
+      const product = await Product.findById(productId);
+  
+      if (!product) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+  
+      // Check if sufficient quantity is available
+      if (product.quantity < purchasedQuantity) {
+        return res.status(400).json({ message: 'Insufficient stock' });
+      }
+  
+      // Deduct the purchased quantity
+      product.quantity -= purchasedQuantity;
+  
+      // Save the updated product
+      await product.save();
+      
+      // Send success response
+      res.status(200).json({
+        message: 'Purchase successful',
+        productName: product.productName,
+        remainingQuantity: product.quantity,
+      });
+    } catch (error) {
+      console.error('Error updating product quantity:', error);
+      res.status(500).json({ message: 'Server error', error });
+    }
+  });
 
 router.post("/create-customer-bill", async (req, res) => {
     try {

@@ -23,7 +23,8 @@ router.post('/add', async (req, res) => {
     res.status(500).json({ error: 'Failed to add product' });
   }
 });
-
+console.log('hi')
+// Update product details by productId
 
 
 module.exports = router;

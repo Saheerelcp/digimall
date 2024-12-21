@@ -32,8 +32,12 @@ const Checkout = () => {
         const response = await fetch(`http://localhost:5129/api/get-saved-addresses/${customerId}`);
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
-          setSavedAddresses(data.address || []);
+          console.log("Saved addresses:", data.address);
+          if (data.address && Array.isArray(data.address)) {
+            setSavedAddresses(data.address);
+          } else {
+            setSavedAddresses([]);
+          }
         } else {
           console.error("Failed to fetch saved addresses.");
         }
@@ -50,7 +54,7 @@ const Checkout = () => {
   };
 
   const handleSavedAddressChange = (e) => {
-    const addressIndex = e.target.value;
+    const addressIndex = parseInt(e.target.value, 10);
     setSelectedAddress(savedAddresses[addressIndex]);
   };
 
@@ -95,25 +99,27 @@ const Checkout = () => {
 
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (paymentMethod) {
       try {
         const cartResponse = await fetch(`http://localhost:5129/api/cart/${customerId}`);
         const cartData = await cartResponse.json();
-
+  
         if (!cartData || !cartData.items || cartData.items.length === 0) {
           return alert("No items in the cart.");
         }
-
+  
         const orderItems = cartData.items.map((item) => ({
+          productId: item.productId,
           productName: item.name,
           quantity: item.quantity,
           price: item.price,
           amount: item.price * item.quantity,
         }));
-
+  
         const totalAmount = orderItems.reduce((total, item) => total + item.amount, 0);
-
+        console.log('hi')
+        // Place order and update product quantity
         const response = await fetch("http://localhost:5129/api/create-customer-bill", {
           method: "POST",
           headers: {
@@ -126,10 +132,24 @@ const Checkout = () => {
             totalAmount,
           }),
         });
-
+  
         const data = await response.json();
-
+        console.log('hi'+data);
         if (response.ok) {
+          // After placing the order, update the product quantity
+          for (const item of orderItems) {
+            await fetch("http://localhost:5129/api/purchase", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                productId: item.productId, // Ensure productId is included in the order
+                purchasedQuantity: item.quantity,
+              }),
+            });
+          }
+  
           alert("Payment successful!");
           navigate(`/delivery-updates/${customerId}`);
         } else {
@@ -143,11 +163,9 @@ const Checkout = () => {
       alert("Please select a payment method.");
     }
   };
-
+  
   return (
-    
     <form onSubmit={handlePaymentSubmit} className="checkout-form">
-      
       <h2>{steps[step]}</h2>
 
       {step === 0 && (
@@ -274,7 +292,6 @@ const Checkout = () => {
         )}
       </div>
     </form>
-
   );
 };
 

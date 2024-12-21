@@ -1,6 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../model/Product'); // Import Product model
+router.put('/update-product/:productId', async (req, res) => {
+  const { productId } = req.params;
+  const { price, quantity, expiryDate } = req.body;
+  console.log('productId'+productId);
+  console.log('hi')
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { price, quantity, expiryDate },
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.status(200).json({ message: 'Product updated successfully', updatedProduct });
+  } catch (error) {
+    console.error('Error updating product:', error);
+    res.status(500).json({ message: 'Error updating product', error });
+  }
+});
 
 router.delete('/products/:productId', async (req, res) => {
   const { productId } = req.params;
