@@ -20,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 // Make the uploads folder publicly accessible
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+
 // MongoDB connection
 mongoose.connect('mongodb://localhost:27017/giveandtake')
   .then(() => console.log('Connected to MongoDB'))
@@ -38,6 +39,8 @@ const deliveryRoutes=require('./router/deliveryRoutes');
 const billRoutes=require('./router/billRoutes');
 const addressRoutes = require('./router/addressRoutes');
 const expensesRoutes = require('./router/expensesRoutes');
+const availabilityRoutes = require('./router/availabilityRoutes');
+const offerRoutes= require('./router/offerRoutes');
 // Use routes (ensure the /api prefix is used in frontend and backend consistently)
 app.use('/api', customerRoutes);
 app.use('/api', sellerRoutes);
@@ -53,6 +56,8 @@ app.use('/api',deliveryRoutes);
 app.use('/api',billRoutes);
 app.use('/api',addressRoutes );
 app.use('/api', expensesRoutes);
+app.use('/api',availabilityRoutes);
+app.use('/api',offerRoutes);
 // Start the server
 
 const port = 5129;

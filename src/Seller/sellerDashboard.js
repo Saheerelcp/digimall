@@ -17,6 +17,12 @@ const SellerDashboard = () => {
   const handleBudget = () => {
     navigate('/budget-section');
   }
+  const handleAvailibility = () => {
+    navigate(`/availability-section`);
+  }
+  const handleOffer = () =>{
+    navigate('/offer-section');
+  }
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowPopup(false);
@@ -57,11 +63,11 @@ const SellerDashboard = () => {
           <FaBell className="button-icon" />
           Notifications
         </button>
-        <button className="dashboard-button">
+        <button className="dashboard-button" onClick={handleAvailibility}>
           <FaChartBar className="button-icon" />
           Availability
         </button>
-        <button className="dashboard-button">
+        <button className="dashboard-button" onClick={handleOffer}>
           <FaGift className="button-icon" />
           Offers
         </button>

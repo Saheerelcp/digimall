@@ -25,6 +25,8 @@ import AddressComponent from './Customer/dashboard/addressComponent';
 import BudgetSection from './Seller/dashBoard/budgetSection';
 import Expenses from './Seller/dashBoard/expenses';
 import ProfitGraph from './Seller/dashBoard/profit';
+import Availability from './Seller/dashBoard/availability';
+import OfferForm from './Seller/dashBoard/offer';
 import './styles/LoginOptions.css';
 import './styles/Signup.css';
 import './styles/SignupSeller.css';
@@ -44,6 +46,8 @@ import './styles/addressComponent.css';
 import './styles/budgetSection.css';
 import './styles/expenses.css';
 import './styles/profit.css';
+import './styles/availability.css';
+import './styles/offer.css';
 function App() {
   return (
     <Router>
@@ -73,6 +77,8 @@ function App() {
           <Route path="budget-section" element={<BudgetSection/>} />
           <Route path="expenses-details" element={<Expenses/>} />
           <Route path="profit-details" element={<ProfitGraph/>} />
+          <Route path="/availability-section" element={<Availability/>} />
+          <Route path="offer-section" element={<OfferForm/>} />
         </Routes>
       </div>
     </Router>
