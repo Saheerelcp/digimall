@@ -4,6 +4,7 @@ import "../../styles/offer.css"; // Import the CSS file
 const OfferForm = () => {
   const [existingProducts, setExistingProducts] = useState([]); // To store existing products
   const [selectedProduct, setSelectedProduct] = useState(null); // To store the selected product details
+  const [existingOffers, setExistingOffers] = useState([]);
   const [newProduct, setNewProduct] = useState({
     productName: "",
     quantity: "",
@@ -21,6 +22,27 @@ const OfferForm = () => {
     const d = new Date(date);
     return d.toISOString().split("T")[0]; // Format as yyyy-MM-dd
   };
+  // Fetch existing offers when component mounts
+  useEffect(() => {
+    const sellerId = localStorage.getItem("sellerId"); // Retrieve sellerId from localStorage
+
+    if (!sellerId) {
+      setError("Seller ID is missing.");
+      return;
+    }
+
+    fetch(`http://localhost:5129/api/get-offers?sellerId=${sellerId}`) // Pass sellerId in the query string
+      .then((response) => response.json())
+      .then((data) => {
+        setExistingOffers(data); // Store the fetched offers in the state
+      })
+      .catch((error) => {
+        console.error("Error fetching offers:", error);
+        setError("Failed to load offers");
+      });
+  }, []); // Empty dependency array to run once on mount
+
+
 
   useEffect(() => {
     // Fetch the seller's existing products (adjust endpoint as per your backend)
@@ -51,10 +73,10 @@ const OfferForm = () => {
 
     // Find the selected product from existingProducts
     const product = existingProducts.find((prod) => prod._id === productId); // Use `_id` to match the product
-    
+
     if (product) {
       console.log("Selected Product:", product); // Log the full product data
-      console.log('product image:'+product.image);
+      console.log('product image:' + product.image);
       setSelectedProduct(product); // Update selected product if found
       // Set the new product details based on the selected product
       setNewProduct({
@@ -62,7 +84,7 @@ const OfferForm = () => {
         productName: product.productName || "",
         quantity: product.quantity || "",
         price: product.price || "",
-        image : product.image,
+        image: product.image,
         expiryDate: formatDate(product.expiryDate) || "", // Format the expiryDate
       });
     }
@@ -238,6 +260,37 @@ const OfferForm = () => {
           <button type="submit">Add Offer</button>
         </form>
       </div>
+
+      <div className="offer-list">
+        <h2>Existing Offers</h2>
+        {existingOffers.length > 0 ? (
+          <ul>
+            {existingOffers.map((offer) => (
+              <li key={offer._id} className="offer-item">
+                {/* Display Product Image */}
+                {offer.productImage && (
+                  <img
+                    src={offer.productImage}
+                    alt={offer.productName}
+                    className="offer-product-image"
+                  />
+                )}
+
+                <p><strong>Product Name:</strong> {offer.productName}</p>
+                <p><strong>Quantity:</strong> {offer.quantity}</p>
+                <p><strong>Price:</strong> {offer.price}</p>
+                <p><strong>Expiry Date:</strong> {new Date(offer.expiryDate).toLocaleDateString()}</p>
+                <p><strong>Discount:</strong> {offer.discount}%</p>
+                <p><strong>Discount Start Date:</strong> {new Date(offer.discountStartDate).toLocaleDateString()}</p>
+                <p><strong>Discount End Date:</strong> {new Date(offer.discountEndDate).toLocaleDateString()}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No offers available</p>
+        )}
+      </div>
+
     </div>
   );
 };
