@@ -54,6 +54,7 @@ const OfferForm = () => {
     
     if (product) {
       console.log("Selected Product:", product); // Log the full product data
+      console.log('product image:'+product.image);
       setSelectedProduct(product); // Update selected product if found
       // Set the new product details based on the selected product
       setNewProduct({
@@ -61,6 +62,7 @@ const OfferForm = () => {
         productName: product.productName || "",
         quantity: product.quantity || "",
         price: product.price || "",
+        image : product.image,
         expiryDate: formatDate(product.expiryDate) || "", // Format the expiryDate
       });
     }
@@ -106,6 +108,7 @@ const OfferForm = () => {
       discount: newProduct.discount,
       discountStartDate: newProduct.discountStartDate,
       discountEndDate: newProduct.discountEndDate,
+      productImage: selectedProduct.image,
     };
 
     // Send the request to the backend

@@ -1,10 +1,10 @@
 /* SellerBills.css */
-body {
+/* body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-  overflow-x: hidden; /* Prevent horizontal overflow */
-}
+  overflow-x: hidden; /* Prevent horizontal overflow 
+} */
 
 .seller-bills {
   padding: 20px;
