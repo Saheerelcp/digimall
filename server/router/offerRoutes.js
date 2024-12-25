@@ -61,5 +61,40 @@ router.get("/get-offers", (req, res) => {
     });
 });
 // Edit an offer
+// Remove an offer
+router.delete("/remove-offer/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedOffer = await Offer.findByIdAndDelete(id);
+    if (!deletedOffer) {
+      return res.status(404).json({ error: "Offer not found" });
+    }
+    res.status(200).json({ message: "Offer successfully removed!", offer: deletedOffer });
+  } catch (error) {
+    console.error("Error removing offer:", error);
+    res.status(500).json({ error: "Failed to remove offer" });
+  }
+});
+
+// Update an offer
+router.put("/update-offer/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { discount } = req.body;
+    const updatedOffer = await Offer.findByIdAndUpdate(
+      id,
+      { discount },
+      { new: true } // Return the updated document
+    );
+    if (!updatedOffer) {
+      return res.status(404).json({ error: "Offer not found" });
+    }
+    res.status(200).json({ message: "Offer successfully updated!", offer: updatedOffer });
+  } catch (error) {
+    console.error("Error updating offer:", error);
+    res.status(500).json({ error: "Failed to update offer" });
+  }
+});
+
 
 module.exports = router;

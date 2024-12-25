@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/offer.css"; // Import the CSS file
+import {  FaTrashAlt } from "react-icons/fa";
 
 const OfferForm = () => {
   const [existingProducts, setExistingProducts] = useState([]); // To store existing products
   const [selectedProduct, setSelectedProduct] = useState(null); // To store the selected product details
   const [existingOffers, setExistingOffers] = useState([]);
+ 
   const [newProduct, setNewProduct] = useState({
     productName: "",
     quantity: "",
@@ -15,6 +17,76 @@ const OfferForm = () => {
     discountEndDate: "",
   });
   const [error, setError] = useState(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  
+    // Validation: Ensure that discount dates are in correct order
+    if (newProduct.discountStartDate && newProduct.discountEndDate) {
+      const startDate = new Date(newProduct.discountStartDate);
+      const endDate = new Date(newProduct.discountEndDate);
+      if (startDate > endDate) {
+        setError("Discount start date cannot be later than the end date.");
+        return;
+      }
+    }
+  
+    const sellerId = localStorage.getItem("sellerId");
+  
+    // Ensure that productId is selected before proceeding
+    if (!selectedProduct) {
+      setError("Please select a product.");
+      return;
+    }
+  
+    // Prepare the form data
+    const offerData = {
+      sellerId,
+      productId: selectedProduct._id, // Use selected product's _id as the productId
+      productName: newProduct.productName,
+      quantity: newProduct.quantity,
+      price: newProduct.price,
+      expiryDate: newProduct.expiryDate,
+      discount: newProduct.discount,
+      discountStartDate: newProduct.discountStartDate,
+      discountEndDate: newProduct.discountEndDate,
+      productImage: selectedProduct.image,
+    };
+  
+    // Send the request to the backend
+    fetch("http://localhost:5129/api/create-offers", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // Set the proper content type
+      },
+      body: JSON.stringify(offerData), // Stringify the data for the backend
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Offer added:", data);
+        alert("Offer successfully added!");
+        
+        // Add the new offer to the existingOffers state
+        setExistingOffers((prevOffers) => [...prevOffers, data]);
+  
+        // Optionally reset the form
+        setNewProduct({
+          productName: "",
+          quantity: "",
+          price: "",
+          expiryDate: "",
+          discount: 0,
+          discountStartDate: "",
+          discountEndDate: "",
+        });
+         // Refresh the page after adding the offer
+      window.location.reload();
+      })
+      .catch((error) => {
+        console.error("Error adding offer:", error);
+        setError("Failed to add offer");
+      });
+  };
 
   // Helper function to format date into yyyy-MM-dd
   const formatDate = (date) => {
@@ -89,6 +161,28 @@ const OfferForm = () => {
       });
     }
   };
+  const handleRemoveOffer = (offerId) => {
+    if (window.confirm("Are you sure you want to delete this offer?")) {
+      fetch(`http://localhost:5129/api/remove-offer/${offerId}`, {
+        method: "DELETE",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Offer removed:", data);
+          alert("Offer successfully removed!");
+          setExistingOffers((prev) => prev.filter((offer) => offer._id !== offerId));
+        })
+        .catch((error) => {
+          console.error("Error removing offer:", error);
+          setError("Failed to remove offer");
+        });
+    }
+  };
+
+
+
+  
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -98,61 +192,8 @@ const OfferForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // Validation: Ensure that discount dates are in correct order
-    if (newProduct.discountStartDate && newProduct.discountEndDate) {
-      const startDate = new Date(newProduct.discountStartDate);
-      const endDate = new Date(newProduct.discountEndDate);
-      if (startDate > endDate) {
-        setError("Discount start date cannot be later than the end date.");
-        return;
-      }
-    }
-
-    const sellerId = localStorage.getItem("sellerId");
-
-    // Ensure that productId is selected before proceeding
-    if (!selectedProduct) {
-      setError("Please select a product.");
-      return;
-    }
-
-    // Prepare the form data
-    const offerData = {
-      sellerId,
-      productId: selectedProduct._id, // Use selected product's _id as the productId
-      productName: newProduct.productName,
-      quantity: newProduct.quantity,
-      price: newProduct.price,
-      expiryDate: newProduct.expiryDate,
-      discount: newProduct.discount,
-      discountStartDate: newProduct.discountStartDate,
-      discountEndDate: newProduct.discountEndDate,
-      productImage: selectedProduct.image,
-    };
-
-    // Send the request to the backend
-    fetch("http://localhost:5129/api/create-offers", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json", // Set the proper content type
-      },
-      body: JSON.stringify(offerData), // Stringify the data for the backend
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Offer added:", data);
-        alert("Offer successfully added!");
-        // Reset the form or redirect to another page
-      })
-      .catch((error) => {
-        console.error("Error adding offer:", error);
-        setError("Failed to add offer");
-      });
-  };
-
+  
+  
   return (
     <div className="complete-body">
       <div className="offer-form">
@@ -283,6 +324,11 @@ const OfferForm = () => {
                 <p><strong>Discount:</strong> {offer.discount}%</p>
                 <p><strong>Discount Start Date:</strong> {new Date(offer.discountStartDate).toLocaleDateString()}</p>
                 <p><strong>Discount End Date:</strong> {new Date(offer.discountEndDate).toLocaleDateString()}</p>
+                <div className="offer-actions">
+                  <button onClick={() => handleRemoveOffer(offer._id)} className="delete-btn">
+                    <FaTrashAlt /> Remove
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
