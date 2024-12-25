@@ -52,7 +52,7 @@ const ShopPage = () => {
             name: product.productName,
             price: product.price,
             quantity: 1,
-            category:product.category,
+            category: product.category,
             image: product.image,
             shopName: product.shopName,
           },
@@ -74,7 +74,6 @@ const ShopPage = () => {
   };
 
   const handleBuyNow = (product) => {
-    
     console.log("Buy now:", product);
   };
 
@@ -103,26 +102,41 @@ const ShopPage = () => {
         <div className="search-results">
           <h2>Search Results</h2>
           <div className="product-list">
-            {filteredProducts.map((product) => (
-              <div key={product._id} className="product-card">
-                <img
-                  src={product.image || "/default-product-image.png"}
-                  alt={product.productName}
-                  className="product-image"
-                />
-                <div className="product-details">
-                  <h3>{product.productName}</h3>
-                  <p>Price: ${product.price}</p>
-                  <p>Quantity: {product.quantity}</p>
-                  <div className="product-actions">
-                    <button onClick={() => handleAddToCart(product)}>
-                      Add to Cart
-                    </button>
-                    <button onClick={() => handleBuyNow(product)}>Buy Now</button>
+            {filteredProducts.map((product) => {
+              const productOffer = product.offer;
+              return (
+                <div key={product._id} className="product-card">
+                  <img
+                    src={product.image || "/default-product-image.png"}
+                    alt={product.productName}
+                    className="product-image"
+                  />
+                  <div className="product-details">
+                    <h3>{product.productName}</h3>
+                    <p>Price: ${product.price}</p>
+                    <p>Quantity: {product.quantity}</p>
+
+                    {/* Display offer if exists */}
+                    {productOffer ? (
+                      <div className="offer-details">
+                        <p>Discount: {productOffer.discount}%</p>
+                        <p>Offer valid from {productOffer.discountStartDate} to {productOffer.discountEndDate}</p>
+                        <p>
+                          Discounted Price: ${product.price - (product.price * productOffer.discount) / 100}
+                        </p>
+                      </div>
+                    ) : (
+                      <p>No current offer</p>
+                    )}
+
+                    <div className="product-actions">
+                      <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
+                      <button onClick={() => handleBuyNow(product)}>Buy Now</button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
@@ -131,26 +145,41 @@ const ShopPage = () => {
         <div className="all-products">
           <h2>All Products</h2>
           <div className="product-list">
-            {products.map((product) => (
-              <div key={product._id} className="product-card">
-                <img
-                  src={product.image || "/default-product-image.png"}
-                  alt={product.productName}
-                  className="product-image"
-                />
-                <div className="product-details">
-                  <h3>{product.productName}</h3>
-                  <p>Price: ${product.price}</p>
-                  <p>Quantity: {product.quantity}</p>
-                  <div className="product-actions">
-                    <button onClick={() => handleAddToCart(product)}>
-                      Add to Cart
-                    </button>
-                    <button onClick={() => handleBuyNow(product)}>Buy Now</button>
+            {products.map((product) => {
+              const productOffer = product.offer;
+              return (
+                <div key={product._id} className="product-card">
+                  <img
+                    src={product.image || "/default-product-image.png"}
+                    alt={product.productName}
+                    className="product-image"
+                  />
+                  <div className="product-details">
+                    <h3>{product.productName}</h3>
+                    <p>Price: ${product.price}</p>
+                    <p>Quantity: {product.quantity}</p>
+
+                    {/* Display offer if exists */}
+                    {productOffer ? (
+                      <div className="offer-details">
+                        <p>Discount: {productOffer.discount}%</p>
+                        <p>Offer valid from {new Date(productOffer.discountStartDate).toLocaleDateString()} to {new Date(productOffer.discountStartDate).toLocaleDateString()}</p>
+                        <p>
+                          Discounted Price: ${product.price - (product.price * productOffer.discount) / 100}
+                        </p>
+                      </div>
+                    ) : (
+                      <p>No current offer</p>
+                    )}
+
+                    <div className="product-actions">
+                      <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
+                      <button onClick={() => handleBuyNow(product)}>Buy Now</button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

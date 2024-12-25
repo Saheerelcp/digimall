@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../model/Product'); // Import Product model
+const Offer = require('../model/Offer');
 router.put('/update-product/:productId', async (req, res) => {
   const { productId } = req.params;
   const { price, quantity, expiryDate } = req.body;
@@ -35,6 +36,33 @@ router.delete('/products/:productId', async (req, res) => {
   }
 });
 // Route to fetch products by sellerId
+// Route to get products with offers
+router.get("/sellers/products/:sellerId", async (req, res) => {
+  const { sellerId } = req.params;
+  
+  try {
+    // Fetch all products from the seller
+    const products = await Product.find({ sellerId });
+    
+    // Fetch all offers related to these products
+    const offers = await Offer.find({ sellerId });
+
+    // Combine products with their respective offers
+    const productsWithOffers = products.map((product) => {
+      const productOffer = offers.find((offer) => offer.productId.toString() === product._id.toString());
+      return {
+        ...product.toObject(),
+        offer: productOffer || null, // If no offer, set to null
+      };
+    });
+
+    res.json(productsWithOffers);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({ message: "Error fetching products" });
+  }
+});
+
 router.get('/products/:sellerId', async (req, res) => {
   const { sellerId } = req.params; // Extract sellerId from the URL parameter
 
