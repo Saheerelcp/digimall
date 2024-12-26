@@ -20,6 +20,7 @@ const ShopPage = () => {
         const data = await response.json();
         if (response.ok) {
           setProducts(data);
+          console.log(data);
         } else {
           console.error("Error fetching products:", data.message);
         }
@@ -40,6 +41,14 @@ const ShopPage = () => {
 
   const handleAddToCart = async (product) => {
     try {
+      
+      // Calculate discounted price if an offer exists
+      const productOffer = product.offer;
+      console.log(productOffer);
+      const discountedPrice = productOffer
+        ? product.price - (product.price * productOffer.discount) / 100
+        : product.price;
+  
       const response = await fetch("http://localhost:5129/api/cart/add", {
         method: "POST",
         headers: {
@@ -50,7 +59,7 @@ const ShopPage = () => {
           product: {
             productId: product._id,
             name: product.productName,
-            price: product.price,
+            price: discountedPrice, // Use discounted price if applicable
             quantity: 1,
             category: product.category,
             image: product.image,
@@ -59,7 +68,7 @@ const ShopPage = () => {
           sellerId: product.sellerId,
         }),
       });
-
+  
       if (response.ok) {
         alert("Product added to cart!");
         navigate(`/cart/${customerId}/${sellerId}`);
@@ -72,11 +81,12 @@ const ShopPage = () => {
       alert("An error occurred while adding the product to the cart.");
     }
   };
+  
 
   const handleBuyNow = (product) => {
     console.log("Buy now:", product);
   };
-
+  
   return (
     <div className="shop-page">
       {/* Header */}
@@ -104,6 +114,7 @@ const ShopPage = () => {
           <div className="product-list">
             {filteredProducts.map((product) => {
               const productOffer = product.offer;
+              
               return (
                 <div key={product._id} className="product-card">
                   <img
@@ -163,7 +174,7 @@ const ShopPage = () => {
                     {productOffer ? (
                       <div className="offer-details">
                         <p>Discount: {productOffer.discount}%</p>
-                        <p>Offer valid from {new Date(productOffer.discountStartDate).toLocaleDateString()} to {new Date(productOffer.discountStartDate).toLocaleDateString()}</p>
+                        <p>Offer valid from {new Date(productOffer.discountStartDate).toLocaleDateString()} to {new Date(productOffer.discountEndDate).toLocaleDateString()}</p>
                         <p>
                           Discounted Price: ${product.price - (product.price * productOffer.discount) / 100}
                         </p>

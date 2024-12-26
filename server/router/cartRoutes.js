@@ -2,57 +2,43 @@ const express = require("express");
 const Cart = require("../model/Cart"); // Import the Cart model
 const router = express.Router();
 
-
-router.post("cart/add", async (req, res) => {
+router.post("/cart/add", async (req, res) => {
   const { customerId, product, sellerId } = req.body;
 
   try {
-    // Find the customer's cart or create a new one if not exists
-    let cart = await Cart.findOne({ customerId });
+    // Find the cart for the customer, now including sellerId at the top level
+    let cart = await Cart.findOne({ customerId, sellerId });
+
+    console.log(`Cart found for customerId: ${customerId}, sellerId: ${sellerId}`);
 
     if (!cart) {
-      cart = new Cart({ customerId, products: [] });
+      // Create a new cart if it doesn't exist for the specific seller
+      cart = new Cart({ customerId, sellerId, items: [] });
     }
 
-    // Ensure products is always an array
-    if (!Array.isArray(cart.products)) {
-      cart.products = [];
-    }
-
-    // Check if the product already exists in the cart
-    const existingProductIndex = cart.products.findIndex(
-      (item) => item.productId.toString() === product.productId
-    );
-
-    if (existingProductIndex > -1) {
-      // Update the quantity and price if the product already exists
-      const existingProduct = cart.products[existingProductIndex];
-      existingProduct.quantity += product.quantity;
-      existingProduct.price = product.price * existingProduct.quantity;
-      cart.products[existingProductIndex] = existingProduct;
+    // Check if the product already exists in the cart from this seller
+    const existingItem = cart.items.find((item) => {
+      return item.productId.toString() === product.productId.toString();
+    });
+    console.log(existingItem);
+    if (existingItem) {
+      // If the product exists, update the quantity
+      existingItem.quantity += product.quantity;
     } else {
-      // Add new product to the cart
-      cart.products.push({
-        productId: product.productId,
-        name: product.name,
-        price: product.price,
-        quantity: product.quantity,
-        category: product.category,
-        image: product.image,
-        shopName: product.shopName,
-        sellerId,
-      });
+      // Add the new product to the cart
+      cart.items.push({ ...product, sellerId });
     }
 
-    // Save the updated cart
+    // Save the cart
     await cart.save();
-    res.status(200).json({ message: "Product added to cart!" });
+
+    res.status(200).json({ message: "Product added to cart successfully!" });
   } catch (error) {
-    console.error("Error adding product to cart:", error);
-    res.status(500).json({ message: "An error occurred while adding the product to the cart." });
+    console.error("Error adding to cart:", error);
+    res.status(500).json({ message: "Error adding product to cart", error });
   }
 });
-
+ 
 router.get("/cart/:customerId/:sellerId", async (req, res) => {
   const { customerId, sellerId } = req.params;
 
