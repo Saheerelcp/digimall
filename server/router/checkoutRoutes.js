@@ -23,7 +23,7 @@ router.get("/get-saved-addresses/:customerId", async (req, res) => {
 router.post("/save-address", async (req, res) => {
   try {
     const { customerId, address } = req.body;
-    console.log(`address of the customer:${address}`);
+   
 
     // Validate input
     if (!customerId || !address) {
@@ -48,29 +48,42 @@ router.post("/save-address", async (req, res) => {
   }
 });
 
-router.post("/create-customer-bill" , async (req, res) => {
+router.post("/create-customer-bill", async (req, res) => {
   try {
-    const { customerId, sellerId, items, totalAmount } = req.body;
+    const { customerId, sellerId, items, totalAmount, address } = req.body;
+
+    // Log the received address for debugging
+    console.log("Received address:", address);
 
     // Validate the request data
-    if (!customerId || !sellerId || !items || items.length === 0 || !totalAmount) {
-      return res.status(400).json({ message: "All fields are required." });
+    if (!customerId || !sellerId || !items || items.length === 0 || !totalAmount || !address) {
+      return res.status(400).json({ message: "All fields are required, including the address." });
     }
 
-    // Create a new customer bill
+    // Create a new customer bill with the provided data
     const customerBill = new CustomerBill({
       customerId,
       sellerId,
       items,
       totalAmount,
-      
+      address: {
+        country: address.country,
+        fullName: address.fullName,
+        mobileNumber: address.mobileNumber,
+        pinCode: address.pinCode,
+        houseNumber: address.houseNumber,
+        area: address.area,
+        landmark: address.landmark,
+        city: address.city,
+        state: address.state,
+      },
     });
 
     // Save the bill to the database
     await customerBill.save();
 
     // Send a success response
-    res.status(201).json({ message: "Customer bill sent to seller successfully!", customerBill });
+    res.status(201).json({ message: "Customer bill created and sent to the seller successfully!", customerBill });
   } catch (error) {
     console.error("Error creating customer bill:", error);
     res.status(500).json({ message: "Internal server error." });

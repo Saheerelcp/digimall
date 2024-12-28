@@ -3,7 +3,17 @@ const mongoose = require("mongoose");
 const CustomerBillSchema = new mongoose.Schema({
   customerId: { type: mongoose.Schema.Types.ObjectId, ref: "Customer", required: true },
   sellerId: { type: mongoose.Schema.Types.ObjectId, ref: "Seller", required: true },
-  
+  address: {
+    country: { type: String, required: true },
+    fullName: { type: String, required: true },
+    mobileNumber: { type: String, required: true },
+    pinCode: { type: String, required: true },
+    houseNumber: { type: String, required: true },
+    area: { type: String, required: true },
+    landmark: { type: String },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+  },
   orderDate: { type: Date, default: Date.now },
   items: [
     {

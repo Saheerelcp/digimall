@@ -1,5 +1,6 @@
 const express = require("express");
-const Cart = require("../model/Cart"); // Import the Cart model
+const Cart = require("../model/Cart");
+const Product = require("../model/Product"); // Import the Cart model
 const router = express.Router();
 
 router.post("/cart/add", async (req, res) => {
@@ -114,5 +115,40 @@ router.post("/cart/update", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// Endpoint to validate stock
+router.post("/cart/validate-stock", async (req, res) => {
+  const { customerId, sellerId, items } = req.body;
+
+  if (!customerId || !sellerId || !items || items.length === 0) {
+    return res.status(400).json({ error: "Invalid request data" });
+  }
+
+  try {
+    const insufficientItems = [];
+
+    for (const item of items) {
+      const product = await Product.findById(item.productId); // Fetch product details from the database
+
+      if (!product || product.quantity < item.quantity) {
+        insufficientItems.push({
+          productId: item.productId,
+          name: product.productName || "Unknown Product",
+          availableStock: (product.quantity).toPrecision(2) || 0,
+        });
+      }
+    }
+    console.log(insufficientItems);
+    if (insufficientItems.length > 0) {
+      return res.json({ isStockSufficient: false, insufficientItems });
+    }
+
+    res.json({ isStockSufficient: true });
+  } catch (error) {
+    console.error("Error validating stock:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 module.exports = router;

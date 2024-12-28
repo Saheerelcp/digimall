@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/checkout.css";
 
 const Checkout = () => {
-  const [step, setStep] = useState(0); // Step management
+  const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({
     country: "",
     fullName: "",
@@ -16,28 +16,24 @@ const Checkout = () => {
     state: "",
   });
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [savedAddresses, setSavedAddresses] = useState([]); // Store saved addresses
-  const [useSavedAddress, setUseSavedAddress] = useState(false); // Toggle between new or saved address
-  const [selectedAddress, setSelectedAddress] = useState(null); // Selected saved address
+  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [useSavedAddress, setUseSavedAddress] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(null);
   const navigate = useNavigate();
 
   const steps = ["Address Details", "Payment Gateway"];
   const customerId = localStorage.getItem("customerId");
   const sellerId = localStorage.getItem("sellerId");
 
+  let dataToSend = {};
+
   useEffect(() => {
-    // Fetch saved addresses for the customer
     const fetchSavedAddresses = async () => {
       try {
         const response = await fetch(`http://localhost:5129/api/get-saved-addresses/${customerId}`);
         if (response.ok) {
           const data = await response.json();
-          console.log("Saved addresses:", data.address);
-          if (data.address && Array.isArray(data.address)) {
-            setSavedAddresses(data.address);
-          } else {
-            setSavedAddresses([]);
-          }
+          setSavedAddresses(data.address || []);
         } else {
           console.error("Failed to fetch saved addresses.");
         }
@@ -65,7 +61,7 @@ const Checkout = () => {
   const handleNextStep = async () => {
     if (step === 0) {
       const addressToSave = useSavedAddress ? selectedAddress : formData;
-      const dataToSend = {
+      dataToSend = {
         customerId,
         address: addressToSave,
       };
@@ -79,16 +75,16 @@ const Checkout = () => {
           body: JSON.stringify(dataToSend),
         });
 
-        if (!response.ok) {
+        if (response.ok) {
+          alert("Address saved successfully!");
+          setStep(step + 1);
+        } else {
           throw new Error("Failed to save address.");
         }
-
-        alert("Address saved successfully!");
-        setStep(step + 1);
       } catch (error) {
         console.error("Error saving address:", error.message);
       }
-    } else if (step === 1) {
+    } else {
       setStep(step + 1);
     }
   };
@@ -100,70 +96,81 @@ const Checkout = () => {
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
   
-    if (paymentMethod) {
-      try {
-        const cartResponse = await fetch(`http://localhost:5129/api/cart/${customerId}`);
-        const cartData = await cartResponse.json();
+    if (!paymentMethod) {
+      return alert("Please select a payment method.");
+    }
   
-        if (!cartData || !cartData.items || cartData.items.length === 0) {
-          return alert("No items in the cart.");
-        }
+    try {
+      const cartResponse = await fetch(`http://localhost:5129/api/cart/${customerId}`);
+      const cartData = await cartResponse.json();
   
-        const orderItems = cartData.items.map((item) => ({
-          productId: item.productId,
-          productName: item.name,
-          quantity: item.quantity,
-          price: item.price,
-          amount: item.price * item.quantity,
-        }));
+      if (!cartData?.items?.length) {
+        return alert("No items in the cart.");
+      }
   
-        const totalAmount = orderItems.reduce((total, item) => total + item.amount, 0);
-        console.log('hi')
-        // Place order and update product quantity
-        const response = await fetch("http://localhost:5129/api/create-customer-bill", {
+      const orderItems = cartData.items.map((item) => ({
+        productId: item.productId,
+        productName: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        amount: item.price * item.quantity,
+      }));
+  
+      const totalAmount = orderItems.reduce((total, item) => total + item.amount, 0);
+  
+      const addressToSend = useSavedAddress ? selectedAddress : formData;
+  
+      // Check stock availability for each item
+      
+      for (const item of orderItems) {
+        const purchaseResponse = await fetch("http://localhost:5129/api/purchase", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            customerId,
-            sellerId,
-            items: orderItems,
-            totalAmount,
+            productId: item.productId,
+            purchasedQuantity: item.quantity,
           }),
         });
   
-        const data = await response.json();
-        console.log('hi'+data);
-        if (response.ok) {
-          // After placing the order, update the product quantity
-          for (const item of orderItems) {
-            await fetch("http://localhost:5129/api/purchase", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                productId: item.productId, // Ensure productId is included in the order
-                purchasedQuantity: item.quantity,
-              }),
-            });
-          }
+        
   
-          alert("Payment successful!");
-          navigate(`/delivery-updates/${customerId}`);
-        } else {
-          alert(data.message || "Something went wrong.");
-        }
-      } catch (err) {
-        console.error(err);
-        alert("An error occurred. Please try again.");
+        
       }
-    } else {
-      alert("Please select a payment method.");
+  
+    
+  
+      // If stock is sufficient, proceed with placing the order
+      const response = await fetch("http://localhost:5129/api/create-customer-bill", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          customerId,
+          sellerId,
+          items: orderItems,
+          totalAmount,
+          address: addressToSend,
+        }),
+      });
+  
+      if (response.ok) {
+        alert("Payment successful!");
+        navigate(`/delivery-updates/${customerId}`);
+      } else {
+        const data = await response.json();
+        alert(data.message || "Something went wrong.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("An error occurred. Please try again.");
     }
   };
   
+  
+
   return (
     <form onSubmit={handlePaymentSubmit} className="checkout-form">
       <h2>{steps[step]}</h2>

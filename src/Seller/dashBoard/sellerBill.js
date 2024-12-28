@@ -13,6 +13,7 @@ const SellerBills = () => {
       try {
         const response = await fetch(`http://localhost:5129/api/seller-bills/${sellerId}`);
         const data = await response.json();
+        console.log(data);
         if (response.ok) {
           setBills(data.bills); // Set bills state with the data fetched from backend
         } else {

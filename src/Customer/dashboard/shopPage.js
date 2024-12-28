@@ -125,7 +125,7 @@ const ShopPage = () => {
                   <div className="product-details">
                     <h3>{product.productName}</h3>
                     <p>Price: ${product.price}</p>
-                    <p>Quantity: {product.quantity}</p>
+                    <p>Quantity: {(product.quantity).toPrecision(2)}</p>
 
                     {/* Display offer if exists */}
                     {productOffer ? (
@@ -168,7 +168,7 @@ const ShopPage = () => {
                   <div className="product-details">
                     <h3>{product.productName}</h3>
                     <p>Price: ${product.price}</p>
-                    <p>Quantity: {product.quantity}</p>
+                    <p>Quantity: {(product.quantity).toPrecision(2)}</p>
 
                     {/* Display offer if exists */}
                     {productOffer ? (

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../../styles/cartPage.css";
 
+
 const CartPage = () => {
   const navigate = useNavigate();
   const { customerId, sellerId } = useParams(); // Get customerId and sellerId from the URL
@@ -34,6 +35,7 @@ const CartPage = () => {
 
     fetchCart();
   }, [customerId, sellerId]);
+  console.log('cartItems' + cartItems);
 
   const calculateTotal = (items) => {
     const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -45,7 +47,7 @@ const CartPage = () => {
       alert("Quantity cannot be less than 1");
       return;
     }
-
+    
     const updatedItems = cartItems.map((item) =>
       item.productId === productId
         ? { ...item, quantity: newQuantity }
@@ -103,14 +105,50 @@ const CartPage = () => {
     }
   };
 
-  const handleProceedToCheckout = () => {
-    if (cartItems.length === 0) {
-      alert("Your cart is empty!");
-      return;
+ const handleProceedToCheckout = async () => {
+  if (cartItems.length === 0) {
+    alert("Your cart is empty!");
+    return;
+  }
+
+  try {
+    // Backend call to validate stock
+    const response = await fetch("http://localhost:5129/api/cart/validate-stock", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        customerId,
+        sellerId,
+        items: cartItems.map(({ productId, quantity }) => ({ productId, quantity })),
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+
+      if (data.isStockSufficient) {
+        // Proceed to checkout if stock is sufficient
+        alert("Proceeding to checkout...");
+        navigate("/checkout");
+      } else {
+        // Display insufficient stock message
+        const insufficientItems = data.insufficientItems.map(
+          (item) => `${item.name}: Only ${item.availableStock} left in stock.`
+        ).join("\n");
+        alert(`Insufficient stock for the following items:\n${insufficientItems}`);
+      }
+    } else {
+      console.error("Failed to validate stock");
+      alert("Error validating stock. Please try again.");
     }
-    alert("Proceeding to checkout...");
-    navigate("/checkout"); // Navigate to the checkout page
-  };
+  } catch (error) {
+    console.error("Error during stock validation:", error);
+    alert("An error occurred while checking stock availability.");
+  }
+};
+
 
   // Ensure the category field is used in the logic as shown below
   const isFloatingAllowed = (category) => {
@@ -140,7 +178,7 @@ const CartPage = () => {
                   <input
                     type="number"
                     step={isFloatingAllowed(item.category) ? "0.1" : "1"}
-                    value={item.quantity}
+                    value={(item.quantity).toPrecision(2)}
                     min="1"
                     onChange={(e) =>
                       handleQuantityChange(
