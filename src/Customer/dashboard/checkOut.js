@@ -24,8 +24,7 @@ const Checkout = () => {
   const steps = ["Address Details", "Payment Gateway"];
   const customerId = localStorage.getItem("customerId");
   const sellerId = localStorage.getItem("sellerId");
-
-  let dataToSend = {};
+  const selectedProduct = JSON.parse(localStorage.getItem("selectedProduct"));
 
   useEffect(() => {
     const fetchSavedAddresses = async () => {
@@ -61,18 +60,16 @@ const Checkout = () => {
   const handleNextStep = async () => {
     if (step === 0) {
       const addressToSave = useSavedAddress ? selectedAddress : formData;
-      dataToSend = {
-        customerId,
-        address: addressToSave,
-      };
-
       try {
         const response = await fetch("http://localhost:5129/api/save-address", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(dataToSend),
+          body: JSON.stringify({
+            customerId,
+            address: addressToSave,
+          }),
         });
 
         if (response.ok) {
@@ -95,33 +92,49 @@ const Checkout = () => {
 
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!paymentMethod) {
       return alert("Please select a payment method.");
     }
-  
+
     try {
-      const cartResponse = await fetch(`http://localhost:5129/api/cart/${customerId}`);
-      const cartData = await cartResponse.json();
-  
-      if (!cartData?.items?.length) {
-        return alert("No items in the cart.");
-      }
-  
-      const orderItems = cartData.items.map((item) => ({
-        productId: item.productId,
-        productName: item.name,
-        quantity: item.quantity,
-        price: item.price,
-        amount: item.price * item.quantity,
-      }));
-  
-      const totalAmount = orderItems.reduce((total, item) => total + item.amount, 0);
-  
       const addressToSend = useSavedAddress ? selectedAddress : formData;
-  
-      // Check stock availability for each item
-      
+      let orderItems = [];
+      let totalAmount = 0;
+
+      if (selectedProduct) {
+        // Handle "Buy Now" scenario
+        orderItems = [
+          {
+            productId: selectedProduct.productId,
+            productName: selectedProduct.name,
+            quantity: selectedProduct.quantity || 1,
+            price: selectedProduct.price,
+            amount: selectedProduct.price * (selectedProduct.quantity || 1),
+          },
+        ];
+        totalAmount = orderItems[0].amount;
+      } else {
+        // Handle cart scenario
+        const cartResponse = await fetch(`http://localhost:5129/api/cart/${customerId}`);
+        const cartData = await cartResponse.json();
+
+        if (!cartData?.items?.length) {
+          return alert("No items in the cart.");
+        }
+
+        orderItems = cartData.items.map((item) => ({
+          productId: item.productId,
+          productName: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          amount: item.price * item.quantity,
+        }));
+
+        totalAmount = orderItems.reduce((total, item) => total + item.amount, 0);
+      }
+
+      // Check stock availability
       for (const item of orderItems) {
         const purchaseResponse = await fetch("http://localhost:5129/api/purchase", {
           method: "POST",
@@ -133,15 +146,13 @@ const Checkout = () => {
             purchasedQuantity: item.quantity,
           }),
         });
-  
-        
-  
-        
+
+        if (!purchaseResponse.ok) {
+          throw new Error(`Stock unavailable for ${item.productName}.`);
+        }
       }
-  
-    
-  
-      // If stock is sufficient, proceed with placing the order
+
+      // Place the order
       const response = await fetch("http://localhost:5129/api/create-customer-bill", {
         method: "POST",
         headers: {
@@ -155,7 +166,7 @@ const Checkout = () => {
           address: addressToSend,
         }),
       });
-  
+
       if (response.ok) {
         alert("Payment successful!");
         navigate(`/delivery-updates/${customerId}`);
@@ -168,8 +179,6 @@ const Checkout = () => {
       alert("An error occurred. Please try again.");
     }
   };
-  
-  
 
   return (
     <form onSubmit={handlePaymentSubmit} className="checkout-form">
@@ -217,7 +226,7 @@ const Checkout = () => {
                       onChange={handleSavedAddressChange}
                     />
                     <span>
-                      {address.fullName}, {address.houseNumber}, {address.area},{" "}
+                      {address.fullName}, {address.houseNumber}, {address.area}, {" "}
                       {address.city}, {address.state} - {address.pinCode}
                     </span>
                   </div>

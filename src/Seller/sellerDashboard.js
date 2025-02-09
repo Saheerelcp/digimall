@@ -23,6 +23,9 @@ const SellerDashboard = () => {
   const handleOffer = () =>{
     navigate('/offer-section');
   }
+  const handleNotifications = () => {
+    navigate('/notification-page');
+  }
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowPopup(false);
@@ -59,7 +62,7 @@ const SellerDashboard = () => {
           <FaMoneyBillWave className="button-icon" />
           Budget
         </button>
-        <button className="dashboard-button">
+        <button className="dashboard-button" onClick={handleNotifications}>
           <FaBell className="button-icon" />
           Notifications
         </button>

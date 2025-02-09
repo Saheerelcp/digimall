@@ -27,6 +27,7 @@ import Expenses from './Seller/dashBoard/expenses';
 import ProfitGraph from './Seller/dashBoard/profit';
 import Availability from './Seller/dashBoard/availability';
 import OfferForm from './Seller/dashBoard/offer';
+import NotificationPage from './Seller/dashBoard/notification';
 import './styles/LoginOptions.css';
 import './styles/Signup.css';
 import './styles/SignupSeller.css';
@@ -48,6 +49,7 @@ import './styles/expenses.css';
 import './styles/profit.css';
 import './styles/availability.css';
 import './styles/offer.css';
+import './styles/notification.css';
 function App() {
   return (
     <Router>
@@ -79,6 +81,7 @@ function App() {
           <Route path="profit-details" element={<ProfitGraph/>} />
           <Route path="/availability-section" element={<Availability/>} />
           <Route path="offer-section" element={<OfferForm/>} />
+          <Route path="notification-page" element={<NotificationPage/>} />
         </Routes>
       </div>
     </Router>

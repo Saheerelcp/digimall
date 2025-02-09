@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Customer = require("../model/Customer");
 const CustomerBill = require("../model/customerBill");
+const {sendNotification} = require('../control/notificationController');
 //fetch saved address
 router.get("/get-saved-addresses/:customerId", async (req, res) => {
   try {
@@ -81,13 +82,20 @@ router.post("/create-customer-bill", async (req, res) => {
 
     // Save the bill to the database
     await customerBill.save();
-
+      // 🔹 Trigger Notification for Seller
+     // 🔹 Trigger Notification for Seller
+     try {
+      await sendNotification(sellerId, "📢 New customer bill received!");
+    } catch (notificationError) {
+      console.error("Failed to send notification:", notificationError);
+    }
     // Send a success response
     res.status(201).json({ message: "Customer bill created and sent to the seller successfully!", customerBill });
   } catch (error) {
     console.error("Error creating customer bill:", error);
     res.status(500).json({ message: "Internal server error." });
   }
+  
 });
 
 module.exports = router;

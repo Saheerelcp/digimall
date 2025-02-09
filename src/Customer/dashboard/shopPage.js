@@ -8,6 +8,8 @@ const ShopPage = () => {
   const { sellerId } = useParams();
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showQuantityPopup, setShowQuantityPopup] = useState(null); // Tracks which product's popup is open
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
 
   const customerId = localStorage.getItem("customerId");
 
@@ -41,14 +43,13 @@ const ShopPage = () => {
 
   const handleAddToCart = async (product) => {
     try {
-      
       // Calculate discounted price if an offer exists
       const productOffer = product.offer;
       console.log(productOffer);
       const discountedPrice = productOffer
         ? product.price - (product.price * productOffer.discount) / 100
         : product.price;
-  
+
       const response = await fetch("http://localhost:5129/api/cart/add", {
         method: "POST",
         headers: {
@@ -68,7 +69,7 @@ const ShopPage = () => {
           sellerId: product.sellerId,
         }),
       });
-  
+
       if (response.ok) {
         alert("Product added to cart!");
         navigate(`/cart/${customerId}/${sellerId}`);
@@ -81,12 +82,34 @@ const ShopPage = () => {
       alert("An error occurred while adding the product to the cart.");
     }
   };
-  
 
   const handleBuyNow = (product) => {
-    console.log("Buy now:", product);
+    setShowQuantityPopup(product._id); // Show the popup for the specific product
   };
-  
+
+  const confirmBuyNow = (product) => {
+    const productOffer = product.offer;
+      console.log(productOffer);
+      const discountedPrice = productOffer
+        ? product.price - (product.price * productOffer.discount) / 100
+        : product.price;
+
+    localStorage.setItem(
+      "selectedProduct",
+      JSON.stringify({
+        productId: product._id,
+        name: product.productName,
+        price: discountedPrice,
+        quantity: selectedQuantity,
+        category: product.category,
+        image: product.image,
+        shopName: product.shopName,
+      })
+    );
+    setShowQuantityPopup(null); // Close the popup
+    navigate(`/checkout`);
+  };
+
   return (
     <div className="shop-page">
       {/* Header */}
@@ -114,7 +137,7 @@ const ShopPage = () => {
           <div className="product-list">
             {filteredProducts.map((product) => {
               const productOffer = product.offer;
-              
+
               return (
                 <div key={product._id} className="product-card">
                   <img
@@ -125,15 +148,23 @@ const ShopPage = () => {
                   <div className="product-details">
                     <h3>{product.productName}</h3>
                     <p>Price: ${product.price}</p>
-                    <p>Quantity: {(product.quantity).toPrecision(2)}</p>
+                    <p>Quantity: {product.quantity.toFixed(2)}</p>
 
                     {/* Display offer if exists */}
                     {productOffer ? (
                       <div className="offer-details">
                         <p>Discount: {productOffer.discount}%</p>
-                        <p>Offer valid from {productOffer.discountStartDate} to {productOffer.discountEndDate}</p>
                         <p>
-                          Discounted Price: ${product.price - (product.price * productOffer.discount) / 100}
+                          Offer valid from{" "}
+                          {new Date(productOffer.discountStartDate).toLocaleDateString()} to{" "}
+                          {new Date(productOffer.discountEndDate).toLocaleDateString()}
+                        </p>
+                        <p>
+                          Discounted Price: $
+                          {(
+                            product.price -
+                            (product.price * productOffer.discount) / 100
+                          ).toFixed(2)}
                         </p>
                       </div>
                     ) : (
@@ -141,8 +172,32 @@ const ShopPage = () => {
                     )}
 
                     <div className="product-actions">
-                      <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
+                      <button onClick={() => handleAddToCart(product)}>
+                        Add to Cart
+                      </button>
                       <button onClick={() => handleBuyNow(product)}>Buy Now</button>
+                      {showQuantityPopup === product._id && (
+                        <div className="quantity-popup">
+                          <label>
+                            Quantity:
+                            <input
+                              type="number"
+                              min="1"
+                              max={product.quantity}
+                              value={selectedQuantity}
+                              onChange={(e) =>
+                                setSelectedQuantity(Number(e.target.value))
+                              }
+                            />
+                          </label>
+                          <button onClick={() => confirmBuyNow(product)}>
+                            Confirm
+                          </button>
+                          <button onClick={() => setShowQuantityPopup(null)}>
+                            Cancel
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -168,15 +223,23 @@ const ShopPage = () => {
                   <div className="product-details">
                     <h3>{product.productName}</h3>
                     <p>Price: ${product.price}</p>
-                    <p>Quantity: {(product.quantity).toPrecision(2)}</p>
+                    <p>Quantity: {product.quantity.toFixed(2)}</p>
 
                     {/* Display offer if exists */}
                     {productOffer ? (
                       <div className="offer-details">
                         <p>Discount: {productOffer.discount}%</p>
-                        <p>Offer valid from {new Date(productOffer.discountStartDate).toLocaleDateString()} to {new Date(productOffer.discountEndDate).toLocaleDateString()}</p>
                         <p>
-                          Discounted Price: ${product.price - (product.price * productOffer.discount) / 100}
+                          Offer valid from{" "}
+                          {new Date(productOffer.discountStartDate).toLocaleDateString()} to{" "}
+                          {new Date(productOffer.discountEndDate).toLocaleDateString()}
+                        </p>
+                        <p>
+                          Discounted Price: $
+                          {(
+                            product.price -
+                            (product.price * productOffer.discount) / 100
+                          ).toFixed(2)}
                         </p>
                       </div>
                     ) : (
@@ -184,8 +247,28 @@ const ShopPage = () => {
                     )}
 
                     <div className="product-actions">
-                      <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
+                      <button onClick={() => handleAddToCart(product)}>
+                        Add to Cart
+                      </button>
                       <button onClick={() => handleBuyNow(product)}>Buy Now</button>
+                       {/* Quantity Popup */}
+                  {showQuantityPopup === product._id && (
+                    <div className="quantity-popup">
+                      <label>
+                        Quantity:
+                        <input
+                          type="number"
+                          min="1"
+                          
+                          max={product.quantity}
+                          value={selectedQuantity}
+                          onChange={(e) => setSelectedQuantity(Number(e.target.value))}
+                        />
+                      </label>
+                      <button onClick={() => confirmBuyNow(product)}>Confirm</button>
+                      <button onClick={() => setShowQuantityPopup(null)}>Cancel</button>
+                    </div>
+                  )}
                     </div>
                   </div>
                 </div>
