@@ -88,26 +88,38 @@ const ShopPage = () => {
   };
 
   const confirmBuyNow = (product) => {
+    if (selectedQuantity > product.quantity) {
+      alert(`Sorry, only ${product.quantity} items available in stock.`);
+      return;
+    }
     const productOffer = product.offer;
-      console.log(productOffer);
-      const discountedPrice = productOffer
-        ? product.price - (product.price * productOffer.discount) / 100
-        : product.price;
-
-    localStorage.setItem(
-      "selectedProduct",
-      JSON.stringify({
-        productId: product._id,
-        name: product.productName,
-        price: discountedPrice,
-        quantity: selectedQuantity,
-        category: product.category,
-        image: product.image,
-        shopName: product.shopName,
-      })
-    );
-    setShowQuantityPopup(null); // Close the popup
-    navigate(`/checkout`);
+    const discountedPrice = productOffer
+      ? product.price - (product.price * productOffer.discount) / 100
+      : product.price;
+  
+    const selectedProductData = {
+      productId: product._id,
+      name: product.productName,
+      price: discountedPrice,
+      quantity: Math.min(selectedQuantity, product.quantity), // Ensure quantity doesn't exceed available stock
+      category: product.category,
+      image: product.image,
+      shopName: product.shopName,
+      sellerId: product.sellerId // Include seller ID for checkout process
+    };
+  
+    // Use JSON.stringify to ensure proper storage
+    localStorage.setItem("selectedProduct", JSON.stringify(selectedProductData));
+    
+    // Optional: Add error handling for storage limits
+    try {
+      localStorage.setItem("selectedProduct", JSON.stringify(selectedProductData));
+      setShowQuantityPopup(null);
+      navigate(`/checkout`);
+    } catch (error) {
+      console.error("Error storing product data:", error);
+      alert("Unable to process purchase. Please try again.");
+    }
   };
 
   return (

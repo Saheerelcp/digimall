@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Product = require('../model/Product');
 
-// Route to fetch products by sellerId
+
+// Route to fetch products by sellerId and check stock alerts
 router.get('/products-quantity', async (req, res) => {
   try {
     const { sellerId } = req.query;
@@ -13,10 +14,12 @@ router.get('/products-quantity', async (req, res) => {
 
     // Fetch products for the given sellerId and sort by quantity
     const products = await Product.find({ sellerId }).sort({ quantity: 1 });
-    
+
     if (products.length === 0) {
       return res.status(404).json({ message: "No products found for this seller" });
     }
+
+    
 
     res.status(200).json(products);
   } catch (error) {

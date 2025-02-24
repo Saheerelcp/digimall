@@ -9,17 +9,32 @@ const NotificationPage = () => {
     useEffect(() => {
         if (!sellerId) return;
 
-        // Fetch notifications from backend
-        fetch(`http://localhost:5129/api/notifications/${sellerId}`)
-            .then((res) => res.json())
-            .then((data) => {
+        // Function to check stock alerts before fetching notifications
+        const checkStockAlerts = async () => {
+            try {
+                await fetch(`http://localhost:5129/api/check-stock-alerts?sellerId=${sellerId}`, {
+                    method: "GET",
+                });
+            } catch (error) {
+                console.error("Error checking stock alerts:", error);
+            }
+        };
+
+        // Function to fetch notifications from backend
+        const fetchNotifications = async () => {
+            try {
+                const res = await fetch(`http://localhost:5129/api/notifications/${sellerId}`);
+                const data = await res.json();
                 setNotifications(data);
+            } catch (error) {
+                console.error("Error fetching notifications:", error);
+            } finally {
                 setLoading(false);
-            })
-            .catch((err) => {
-                console.error("Error fetching notifications:", err);
-                setLoading(false);
-            });
+            }
+        };
+
+        // Run both functions
+        checkStockAlerts().then(fetchNotifications);
 
     }, [sellerId]);
 

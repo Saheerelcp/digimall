@@ -1,0 +1,71 @@
+.customer-notification-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+  }
+  
+  .customer-notification-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .customer-notification-message {
+    text-align: center;
+    color: #6c757d;
+  }
+  
+  .customer-notification-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .customer-notification-item {
+    background-color: white;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .customer-notification-item:hover {
+    background-color: #f1f3f5;
+  }
+  
+  .customer-notification-item.unread {
+    border-left: 4px solid #007bff;
+  }
+  
+  .customer-notification-item.read {
+    opacity: 0.7;
+  }
+  
+  .notification-content {
+    display: flex;
+    align-items: center;
+  }
+  
+  .notification-icon {
+    font-size: 24px;
+    margin-right: 15px;
+  }
+  
+  .notification-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .notification-text {
+    font-weight: 500;
+    color: #212529;
+  }
+  
+  .notification-timestamp {
+    font-size: 0.8em;
+    color: #6c757d;
+    margin-top: 5px;
+  }

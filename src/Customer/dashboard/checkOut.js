@@ -148,6 +148,7 @@ const Checkout = () => {
         });
 
         if (!purchaseResponse.ok) {
+          console.log(item.productName);
           throw new Error(`Stock unavailable for ${item.productName}.`);
         }
       }

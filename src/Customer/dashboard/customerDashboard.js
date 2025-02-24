@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate hook
-import { FaShoppingCart, FaUser } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { FaBell, FaUser } from "react-icons/fa";
 import "../../styles/customerDashboard.css";
 
 const CustomerDashboard = () => {
   const [sellers, setSellers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
-  // Fetch seller data from the backend
   useEffect(() => {
     const fetchSellers = async () => {
       try {
@@ -25,19 +24,25 @@ const CustomerDashboard = () => {
     fetchSellers();
   }, []);
 
-  // Filter sellers based on search term
   const filteredSellers = sellers.filter((seller) =>
     seller.shopName.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
-  // Handle profile icon click
+
   const handleProfileClick = () => {
-    navigate(`/profile-icon`); // Navigate to CustomerProfile page
+    navigate(`/profile-icon`);
+  };
+
+  const handleNotificationClick = () => {
+    navigate(`/notifications-customer`);
+  };
+
+  const handleShopNow = (sellerId) => {
+    localStorage.setItem("sellerId", sellerId);
+    window.location.href = `/shop/${sellerId}`;
   };
 
   return (
     <div className="customer-dashboard">
-      {/* Header */}
       <header className="header">
         <div className="header-left">
           <img src="/path-to-your-logo.png" alt="Logo" className="logo" />
@@ -54,14 +59,19 @@ const CustomerDashboard = () => {
           <button className="search-btn">Search</button>
         </div>
         <div className="header-right">
-          <FaUser
-            className="icon profile-icon"
-            onClick={handleProfileClick} // Call handleProfileClick when clicked
-          />
+          <div className="icon-container">
+            <FaBell 
+              className="icon notification-icon" 
+              onClick={handleNotificationClick}
+            />
+            <FaUser 
+              className="icon profile-icon" 
+              onClick={handleProfileClick}
+            />
+          </div>
         </div>
       </header>
 
-      {/* Sellers Section */}
       <section className="shops-section">
         {filteredSellers.map((seller) => (
           <div className="shop-block" key={seller._id}>
@@ -86,12 +96,6 @@ const CustomerDashboard = () => {
       </section>
     </div>
   );
-};
-
-// Handle the "Shop Now" action
-const handleShopNow = (sellerId) => {
-  localStorage.setItem("sellerId", sellerId);
-  window.location.href = `/shop/${sellerId}`;
 };
 
 export default CustomerDashboard;

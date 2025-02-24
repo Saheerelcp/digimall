@@ -10,10 +10,7 @@ const productSchema = new mongoose.Schema({
   category: { type: String, required: true },
   sellerId: { type: String, required: true }, // Ensure sellerId is included
   customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer' },
-  ratings: [{
-    rating: { type: Number, enum: [0, 1], required: true }, // 0 = Dislike, 1 = Like
-    createdAt: { type: Date, default: Date.now }
-  }]
+  
 });
 
 const Product = mongoose.model('Product', productSchema);

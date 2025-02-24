@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const CustomerBill = require("../model/customerBill"); // Your CustomerBill model
-
+const Notification = require("../model/customerNotifications");
 const Product = require("../model/Product"); // Order model (if needed for tracking)
 const Cart = require("../model/Cart"); // Cart model
 // Fetch the cart for a specific customer
@@ -114,7 +114,15 @@ router.patch("/update-bill/:billId", async (req, res) => {
         { expectedDelivery, status },
         { new: true }
       );
-  
+       // Create a notification for the customer
+    const notification = new Notification({
+      customerId: bill.customerId, // Assuming bill has a customerId field
+      message: `📦 Your order status has been updated to: ${status}. Expected delivery: ${expectedDelivery}`,
+      timestamp: new Date(),
+      read: false,
+    });
+
+    await notification.save(); // Save the notification
       if (!bill) {
         return res.status(404).json({ message: "Bill not found." });
       }

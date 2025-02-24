@@ -178,8 +178,9 @@ const CartPage = () => {
                   <input
                     type="number"
                     step={isFloatingAllowed(item.category) ? "0.1" : "1"}
-                    value={(item.quantity).toPrecision(2)}
+                    value={(item.quantity).toFixed(1)}
                     min="1"
+                    max={100}
                     onChange={(e) =>
                       handleQuantityChange(
                         item.productId,
