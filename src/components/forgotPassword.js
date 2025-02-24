@@ -25,7 +25,7 @@ const ForgotPassword = () => {
         throw new Error(errorData.error || 'Error occurred');
       }
 
-      const data = await response.json();
+     // const data = await response.json();
       setSuccessMessage('OTP sent to your email. Please check.');
 
       // Redirect to OTP verification page

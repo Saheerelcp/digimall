@@ -19,7 +19,7 @@ const AddressComponent = () => {
   const [editIndex, setEditIndex] = useState(null); // Track which address is being edited
   const [errorMessage, setErrorMessage] = useState("");
   const customerId = localStorage.getItem("customerId");
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch all addresses when component loads
@@ -58,7 +58,7 @@ const AddressComponent = () => {
       });
 
       if (response.ok) {
-        const result = await response.json();
+        //const result = await response.json();
         alert("Address saved successfully!");
         setAddresses((prevAddresses) => [...prevAddresses, formData]); // Add new address to state
         resetForm();
