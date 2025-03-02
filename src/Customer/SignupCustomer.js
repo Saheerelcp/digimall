@@ -10,7 +10,10 @@ const SignupCustomer = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (password.length < 8) {
+      setErrorMessage("Password must be at least 8 characters long.");
+      return; // Stop execution if the password is too short
+    }
     console.log('Sending data:', { email, password });  // Log email and password data
 
     try {
@@ -63,15 +66,16 @@ const SignupCustomer = () => {
           required
         />
 
-        <label htmlFor="password">Password:</label> {/* Password input field */}
+        <label htmlFor="password">Password:</label>
         <input
           type="password"
           id="password"
           name="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)} // Handle password input
+          onChange={(e) => setPassword(e.target.value)}
           required
         />
+       
 
         <button type="submit">Sign Up</button>
         {errorMessage && <div className="error-message">{errorMessage}</div>}

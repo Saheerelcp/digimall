@@ -1,132 +1,229 @@
-/* General styling */
+/* Main container */
 .dashboard-container {
-    font-family: Arial, sans-serif;
-    color: #333;
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Ensure full-screen height */
-}
-
-/* Popup styling */
-.popup {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #e0ffe0;
-    color: #006400;
-    padding: 15px 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 100, 0, 0.2);
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    z-index: 10;
-}
-
-/* Header styling */
-.dashboard-header {
+    height: 100vh;
+    padding: 12px;
+    box-sizing: border-box;
+    overflow: hidden;
+    background-color: #b8fd9c;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  /* Header styling */
+  .dashboard-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 30px;
-    background-color: #ffffff; /* White background */
-    color: #333333;
-    width: 100%;
-    box-sizing: border-box;
-    position: relative;
-    margin-top: 20px; /* Add top margin */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds subtle shadow */
-}
-
-.dashboard-header h1 {
-    margin: 0;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.profile-icon {
-    font-size: 28px;
-    cursor: pointer;
-}
-
-/* Coverpage space styling */
-.coverpage-space {
-    height: 30vh; /* 30% of the viewport height */
-    background-color: #f0f5f0;
-    border: 2px dashed #006400;
-    margin: 20px 0;
-    width: 100%;
-}
-
-/* Button grid styling */
-.button-grid {
-    display: flex;
-    flex-wrap: wrap; /* Allow wrapping of buttons */
-    justify-content: space-around; /* Distribute buttons evenly */
-    gap: 20px;
-    padding: 20px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* Button styling */
-.dashboard-button {
-    padding: 20px;
-    font-size: 16px;
-    font-weight: bold;
-    background-color: #008000; /* Green */
-    color: #ffffff;
+    padding: 0px 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  }
+  .logo-icon{
+    width: 50px;
+    height: auto;
+    border-radius: 25px;
+  }
+  .dashboard-header h1 {
+    margin-left: 20px;
+    margin-bottom: 15px;
+    white-space: nowrap;
+    font-size: 1.8rem;
+    color: rgb(7, 70, 10);
+    font-weight: 900;
+    letter-spacing: 0.5px;
+  }
+  
+  .profile-button {
+    background-color: rgb(255, 255, 255);
     border: none;
-    border-radius: 8px;
     cursor: pointer;
-    text-align: center;
-    transition: background-color 0.3s ease;
+    padding: 0;
+    width: 50px;
+    
+  }
+  .profile-button:hover{
+    background-color: white;
+  }
+  .profile-icon {
+    font-size: 2.5rem;
+    color: rgb(11, 102, 21);
+    transition: transform 0.2s;
+  }
+  
+  .profile-icon:hover {
+    
+    transform: scale(1.1);
+  }
+  
+ 
+/* Coverpage slider - IMPROVED */
+.coverpage-space {
+    flex: 1;
+    margin-bottom: 15px;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    max-height: calc(100vh - 300px); /* Adjusted to ensure buttons are visible */
+    position: relative;
+    background-color: white;
+  }
+  
+  .coverpage-slider {
+    height: 100%;
+    width: 100%;
+    position: relative;
+  }
+  
+  .image-slide {
+    height: 100%;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  
+  .image-slide img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 10px;
+  }
+  
+  /* Button grid */
+  .button-grid {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: nowrap;
+    width: 100%;
+    padding: 10px 20px;
+    min-height: 90px;
+  }
+  
+  .dashboard-button {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 150px; /* Fixed width for buttons */
-    height: 150px; /* Fixed height for buttons */
-}
-
-.dashboard-button:hover {
-    background-color: #006400; /* Darker green */
-}
-
-.button-icon {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-/* Make buttons responsive */
-@media (max-width: 1024px) {
-    .dashboard-button {
-        width: 120px;
-        height: 120px;
-    }
-}
-
-@media (max-width: 768px) {
+    padding: 25px 20px;
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    color: #2c5f2d;
+    font-weight: 500;
+    flex: 0 1 auto;
+    min-width: 100px;
+    max-width: 130px;
+  }
+  
+  .dashboard-button:hover {
+    background-color: #a1e2a7;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .button-icon {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    color: #2e7d32;
+  }
+  
+  /* Slider customization */
+  .slick-dots {
+    bottom: 10px;
+  }
+  
+  .slick-dots li button:before {
+    color: #2e7d32;
+    opacity: 0.5;
+  }
+  
+  .slick-dots li.slick-active button:before {
+    color: #2e7d32;
+    opacity: 1;
+  }
+  
+  .slick-prev, .slick-next {
+    z-index: 1;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .slick-prev {
+    left: 15px;
+  }
+  
+  .slick-next {
+    right: 15px;
+  }
+  
+  .slick-prev:before, .slick-next:before {
+    font-size: 40px;
+    opacity: 0.8;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 1024px) {
     .button-grid {
-        justify-content: center; /* Center buttons on medium screens */
+      gap: 15px;
+      padding: 10px;
     }
-
+    
     .dashboard-button {
-        width: 100px;
-        height: 100px;
+      min-width: 90px;
     }
-}
-
-@media (max-width: 480px) {
+  }
+  
+  @media (max-width: 768px) {
+    .coverpage-space {
+      max-height: calc(100vh - 200px);
+    }
+    
     .button-grid {
-        flex-direction: column; /* Stack buttons vertically on small screens */
-        align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
     }
-
+  }
+  
+  @media (max-width: 480px) {
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 10px;
+    }
+    
     .dashboard-button {
-        width: 90%;
-        height: 90px; /* Adjust height on smaller screens */
-        margin-bottom: 15px; /* Add spacing between buttons */
+      min-width: auto;
+      max-width: none;
+      width: 100%;
     }
-}
+    
+    .coverpage-space {
+      max-height: calc(100vh - 220px);
+    }
+  }
+  
+  @media (max-width: 380px) {
+    .button-grid {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+    }
+    
+    .dashboard-header h1 {
+      font-size: 1.5rem;
+    }
+    
+    .profile-icon {
+      font-size: 2.2rem;
+    }
+  }

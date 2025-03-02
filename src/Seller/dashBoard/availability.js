@@ -46,47 +46,36 @@ const Availability = () => {
 
   // Function to determine the color of the battery gauge based on quantity
   const getGaugeColor = (quantity) => {
-    const level = calculateBatteryLevel(quantity);
-    if (level > 60) return "green";
-    if (level > 30) return "yellow";
-    return "red";
+    if (quantity < 5) return "#ff0000"; // Red
+    if (quantity < 20) return "#ffa500"; // Yellow
+    return "#008000"; // Green
   };
 
   return (
     <div className="availability-section">
-      <h1>Availability of Products</h1>
+      <h1 className="title">Availability of Products</h1>
       {error ? (
         <p className="error-message">{error}</p>
       ) : (
-        <div className="product-list">
+        <div className="product-grid">
           {products.length > 0 ? (
             products.map((product) => (
-              <div className="product-item" key={product._id || product.id}>
-                {/* Circular Progressbar Battery Gauge */}
-                <div className="battery-gauge">
-                  {product.quantity === 0 ? (
-                    <div className="empty-message">Product is empty</div>
-                  ) : (
-                    <CircularProgressbar
-                      value={calculateBatteryLevel(product.quantity)}
-                      text={`${product.quantity}`}
-                      styles={buildStyles({
-                        pathColor: getGaugeColor(product.quantity),
-                        textColor: "#000",
-                        trailColor: "#f3f3f3",
-                        strokeLinecap: "round",
-                        textSize: "16px",
-                      })}
-                    />
-                  )}
+              <div className="product-card" key={product._id || product.id}>
+                <div className="cylinder-container">
+                  <div
+                    className="cylinder-fill"
+                    style={{
+                      height: `${Math.min(product.quantity, 100)}%`,
+                      backgroundColor: getGaugeColor(product.quantity),
+                    }}
+                  ></div>
                 </div>
-
-                {/* Product Name */}
-                <div className="product-name">{product.productName}</div>
+                <p className="product-name">{product.productName}</p>
+                <p className="product-quantity">Quantity: {product.quantity}</p>
               </div>
             ))
           ) : (
-            <p>No products available for this seller.</p>
+            <p className="no-products">No products available for this seller.</p>
           )}
         </div>
       )}

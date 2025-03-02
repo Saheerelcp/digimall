@@ -1,14 +1,5 @@
 /* Container styling */
-.container {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #ffffff;
-    border: 1px solid #d1d1d1;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-  }
+
   
   /* Heading */
   .container h1 {
@@ -49,7 +40,7 @@
   .container button {
     width: 100%;
     padding: 12px;
-    background-color: #008000; /* Green */
+    background-color: #0d9408; /* Green */
     color: #ffffff;
     border: none;
     border-radius: 4px;

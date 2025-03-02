@@ -22,6 +22,8 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const Expenses = () => {
   const [category, setCategory] = useState('');
   const [amount, setAmount] = useState('');
+  const [popupMessage, setPopupMessage] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
   const [graphData, setGraphData] = useState({
     labels: [], // Initialize as empty array
     datasets: [] // Initialize as empty array
@@ -55,7 +57,10 @@ const Expenses = () => {
 
       if (!response.ok) throw new Error('Failed to add expense.');
 
-      alert('Expense added successfully!');
+      
+      setPopupMessage("Expense added successfully!");
+      setShowPopup(true);
+      setTimeout(() => setShowPopup(false), 3000); // Hide popup after 3 seconds
       setCategory('');
       setAmount('');
     } catch (error) {
@@ -111,7 +116,7 @@ const Expenses = () => {
   return (
     <div className="expenses-container">
       <h2>Track Your Expenses</h2>
-
+      {showPopup && <div className="popup-message">{popupMessage}</div>}
       {/* Category Selection */}
       <div className="categories">
         {categories.map((cat) => (

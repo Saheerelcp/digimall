@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/SignupSeller.css'; // Assuming you have a separate CSS file for styling sellers
+import '../styles/SignupSeller.css';
 
 const SignupSeller = () => {
-  const [step, setStep] = useState(1); // Tracks the step in the signup process
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [sellerName, setSellerName] = useState('');
@@ -16,13 +16,25 @@ const SignupSeller = () => {
 
   const handleSubmitInitial = (e) => {
     e.preventDefault();
-    setErrorMessage(''); // Clear any previous error messages
-    setStep(2); // Move to the business details section
+    setErrorMessage('');
+    
+    if (password.length < 8) {
+      setErrorMessage('Password must be at least 8 characters long.');
+      return;
+    }
+    
+    setStep(2);
   };
 
   const handleSubmitFinal = async (e) => {
     e.preventDefault();
-
+    setErrorMessage('');
+    
+    if (contactNumber.length !== 10 || !/^[0-9]+$/.test(contactNumber)) {
+      setErrorMessage('Phone number must be exactly 10 digits.');
+      return;
+    }
+    
     try {
       const response = await fetch('http://localhost:5129/api/SignupSeller', {
         method: 'POST',
@@ -47,20 +59,12 @@ const SignupSeller = () => {
 
       const data = await response.json();
       console.log('Signup successful:', data);
-      console.log(data.sellerId);
       localStorage.setItem('sellerId', data.sellerId);
 
-      // Store sellerId in localStorage (optional)
-      
-
-      // Set a success message
       setSuccessMessage(`Congratulations, welcome to ${shopName}!`);
-
-      // Redirect after a short delay
       setTimeout(() => {
         navigate('/seller-dashboard');
       }, 2000);
-
     } catch (error) {
       console.error('Error during signup:', error.message);
       setErrorMessage(error.message);
@@ -139,17 +143,17 @@ const SignupSeller = () => {
           />
 
           <button type="submit">Sign Up</button>
-
-          {errorMessage && (
-            <div className="error-message" style={{ color: 'red' }}>
-              {errorMessage}
-            </div>
-          )}
         </form>
       )}
 
+      {errorMessage && (
+        <div className="error-message" >
+          {errorMessage}
+        </div>
+      )}
+
       {successMessage && (
-        <div className="success-message" style={{ color: 'green', marginTop: '20px' }}>
+        <div className="success-message" >
           {successMessage}
         </div>
       )}

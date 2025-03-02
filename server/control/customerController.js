@@ -45,12 +45,12 @@ const loginCustomer = async (req, res) => {
 
     // If no customer is found
     if (!customer) {
-      return res.status(404).send("Email not found. Please sign up.");
+      return res.status(404).json({error:"Email not found. Please sign up."});
     }
 
     // Check if the password matches
     if (customer.password !== password) {
-      return res.status(401).send("Incorrect password. Try again or reset your password.");
+      return res.status(401).json({error:"Incorrect password. Try again or reset your password."});
     }
 
     // If everything is correct, send success response
@@ -61,7 +61,7 @@ const loginCustomer = async (req, res) => {
 
   } catch (error) {
     console.error(error);
-    return res.status(500).send("An error occurred. Please try again.");
+    return res.status(500).json({error:"An error occurred. Please try again."});
   }
 };
 

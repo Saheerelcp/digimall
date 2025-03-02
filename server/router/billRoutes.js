@@ -80,7 +80,7 @@ router.get("/seller-bills/:sellerId", async (req, res) => {
 
       // Format the customer address to a string or object as needed for frontend
       const formattedBills = bills.map(bill => {
-          const { address, items, totalAmount, orderDate } = bill;
+          const { address, items, totalAmount, orderDate ,status } = bill;
           // Format address as a string for easier frontend rendering
           const addressString = `${address.houseNumber}, ${address.area}, ${address.city}, ${address.state}, ${address.pinCode}`;
           console.log(`Customer Name: ${address.fullName}`);
@@ -92,6 +92,7 @@ router.get("/seller-bills/:sellerId", async (req, res) => {
               customerAddress: addressString, // Or pass as an object if needed
               orderDate,
               items,
+              status,
               totalAmount,
           };
       });

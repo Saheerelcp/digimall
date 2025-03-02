@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import '../../styles/addProduct.css';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaSearch, FaUpload, FaEdit, FaTrash, FaEllipsisV } from "react-icons/fa";
 
 function AddProduct() {
   const { category } = useParams();
@@ -14,6 +14,7 @@ function AddProduct() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [showOptions, setShowOptions] = useState(null);
 
   const sellerId = localStorage.getItem('sellerId');
 
@@ -139,14 +140,14 @@ function AddProduct() {
       alert('Error adding product.');
     }
   };
-  
+
   const handleUpdateProduct = async (productId) => {
     const updatedProduct = {
       price: editingProduct.price,
       quantity: editingProduct.quantity,
       expiryDate: editingProduct.expiryDate,
     };
-    
+
     try {
       const response = await fetch(`http://localhost:5129/api/update-product/${productId}`, {
         method: 'PUT',
@@ -175,46 +176,73 @@ function AddProduct() {
   return (
     <div className="add-product-page">
       <h2>Add Product to {category}</h2>
-      <input
-        type="text"
-        placeholder="Search products..."
-        value={searchTerm}
-        onChange={handleSearch}
-        className="search-box"
-      />
-      <div className="product-input">
+      <p className="subtext">Add new products to your inventory and manage existing ones.</p>
+
+      {/* Search Box */}
+      <div className="search-box">
+
         <input
           type="text"
-          placeholder="Product Name"
-          value={productName}
-          onChange={(e) => setProductName(e.target.value)}
+          placeholder="Search products..."
+          value={searchTerm}
+          onChange={handleSearch}
+
         />
-        <input
-          type="number"
-          placeholder="Price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Quantity"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-        />
-        <input
-          type="date"
-          placeholder="Expiry Date"
-          value={expiryDate}
-          onChange={(e) => setExpiryDate(e.target.value)}
-        />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-        />
-        <button onClick={handleAddProduct}>Add Product</button>
+        <FaSearch className="search-icon" />
       </div>
-      {error && <div className="error-message">{error}</div>}
+
+      {/* Product Input Fields */}
+      <div className="product-input">
+        <div className="row">
+          <input
+            type="text"
+            placeholder="Product Name"
+            value={productName}
+            onChange={(e) => setProductName(e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Quantity"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+          />
+        </div>
+
+        <div className="exp-img-block">
+          <input className='expiray'
+            type="date"
+            value={expiryDate}
+            onChange={(e) => setExpiryDate(e.target.value)}
+
+            placeholder="Expiry Date"
+          />
+
+          {/* Image Upload Placeholder */}
+          <div className="upload-placeholder">
+            <label htmlFor="product-image" className="upload-label">
+              <FaUpload className="upload-icon" />
+              <span>Upload Product Image</span>
+            </label>
+            <input
+              type="file"
+              id="product-image"
+              accept="image/*"
+              onChange={handleImageUpload}
+            />
+          </div>
+
+        </div>
+
+        <button className="add-btn" onClick={handleAddProduct}><span >+</span>  Add Product</button>
+      </div>
+
+      {/* Product List */}
       <div className="products-grid">
         {products
           .filter((product) =>
@@ -223,64 +251,46 @@ function AddProduct() {
           .map((product) => (
             <div className="product-card" key={product._id}>
               <div className="image-placeholder">
-                {product.image ? (
-                  <img src={product.image} alt={product.productName} />
-                ) : (
-                  'No Image'
-                )}
+                {product.image ? <img src={product.image} alt={product.productName} /> : "No Image"}
               </div>
               <div className="product-info">
                 <h3>{product.productName}</h3>
                 <p>Price: ${product.price}</p>
                 <p>{quantityType(product.category, product.quantity)}</p>
-                <p>Expiry: {product.expiryDate || 'N/A'}</p>
-                <button
-                  className="edit-button"
-                  onClick={() => setEditingProduct(product)}
-                >
-                  <FaEdit />
-                </button>
-                <button
-                  className="remove-button"
-                  onClick={() => handleRemoveProduct(product._id)}
-                >
-                  <FaTrash />
-                </button>
+                <p>Expiry: {product.expiryDate ? new Date(product.expiryDate).toLocaleDateString() : "N/A"}</p>
               </div>
+
+              {/* Three Dots Menu */}
+              <div className="options-menu" onClick={() => setShowOptions(showOptions === product._id ? null : product._id)}>
+                <FaEllipsisV />
+                {showOptions === product._id && (
+                  <div className="options-dropdown">
+                    <FaEdit className="edit-icon" onClick={() => setEditingProduct(product)} />
+                    <FaTrash className="delete-icon" onClick={() => handleRemoveProduct(product._id)} />
+                  </div>
+                )}
+              </div>
+
+
+              {/* Edit Product Popup */}
               {editingProduct && editingProduct._id === product._id && (
                 <div className="edit-popup">
                   <input
                     type="number"
                     value={editingProduct.price}
-                    onChange={(e) =>
-                      setEditingProduct({ ...editingProduct, price: e.target.value })
-                    }
+                    onChange={(e) => setEditingProduct({ ...editingProduct, price: e.target.value })}
                   />
                   <input
                     type="number"
                     value={editingProduct.quantity}
-                    onChange={(e) =>
-                      setEditingProduct({
-                        ...editingProduct,
-                        quantity: e.target.value,
-                      })
-                    }
+                    onChange={(e) => setEditingProduct({ ...editingProduct, quantity: e.target.value })}
                   />
                   <input
                     type="date"
                     value={editingProduct.expiryDate}
-                    onChange={(e) =>
-                      setEditingProduct({
-                        ...editingProduct,
-                        expiryDate: e.target.value,
-                      })
-                    }
+                    onChange={(e) => setEditingProduct({ ...editingProduct, expiryDate: e.target.value })}
                   />
-                  <button
-                    onClick={() => handleUpdateProduct(product._id)}
-                  >
-                    Save
-                  </button>
+                  <button onClick={() => handleUpdateProduct(product._id)}>Save</button>
                 </div>
               )}
             </div>

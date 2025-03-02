@@ -9,10 +9,10 @@
     text-align: center;
   }
   
-  h2 {
+  .categories-container h2 {
     margin-bottom: 20px;
     font-size: 1.5rem;
-    color: #333;
+    color: #0a2c03;
   }
   
   .categories-grid {
@@ -25,7 +25,7 @@
   }
   
   .category-button {
-    background-color: #4caf50; /* Green color */
+    background-color: #235725; /* Green color */
     color: white;
     padding: 15px;
     font-size: 1rem;

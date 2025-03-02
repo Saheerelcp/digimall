@@ -19,16 +19,14 @@ const CustomerLogin = () => {
       });
       const data = await response.json();
       if (!response.ok) {
-        const message = await response.text();
-        console.log("Error:", response.status, message);
-        setErrorMessage(message);  // Display error message
+        setErrorMessage(data.error || 'Login failed. Please try again.');
       } else {
         localStorage.setItem('customerId', data.customerId);
         // Redirect to the home page or another page after successful login
         navigate('/customer-dashboard');
       }
     } catch (error) {
-      setErrorMessage('An error occurred. Please try again.');
+      setErrorMessage('An error occured');
     }
   };
 

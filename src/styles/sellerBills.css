@@ -1,72 +1,83 @@
-/* SellerBills.css */
-/* body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  overflow-x: hidden; /* Prevent horizontal overflow 
-} */
-
-.seller-bills {
+.profile-container {
+  max-width: 800px;
+  margin: 0 auto;
   padding: 20px;
-  max-width: 1200px; /* Optional: Center content */
-  margin: 0 auto; /* Center the content horizontally */
+  background: #f9f9f9;
+  border-radius: 10px;
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-  
-.bill-details {
-  max-height: 400px; /* Limit the height of each bill */
-  overflow-y: auto; /* Enable vertical scrolling for the bill */
-  margin-bottom: 20px; /* Add spacing between bills */
-  border: 1px solid #ddd;
+.profile-title {
+  font-size: 24px;
+  color: #333;
+}
+
+.logout-button {
+  background: red;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.view-details-button {
+  width: 100%;
   padding: 10px;
-  border-radius: 5px; /* Optional: rounded corners */
-  background-color: #fff; /* Optional: ensure a clean background */
+  margin-top: 15px;
+  background: green;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-  
-  .customer-info p {
-    margin: 5px 0;
-    font-size: 16px;
-  }
-  
-  .customer-info p strong {
-    font-weight: bold;
-  }
-  
-  .divider {
-    border-top: 2px solid #ddd;
-    margin: 20px 0;
-  }
-  
-  .table-container {
-    overflow-x: auto; /* Enable horizontal scrolling */
-    margin-bottom: 20px; /* Add some space below the table */
-  }
-  
-  table {
-    width: 100%; /* Ensure the table stretches properly */
-    border-collapse: collapse;
-  }
-  
-  th, td {
-    text-align: left;
-    padding: 8px;
-    border: 1px solid #ddd; /* Optional: for better readability */
-  }
-  
-  th {
-    background-color: #f2f2f2;
-  }
-  
-  .seller-bills-container {
-    max-height: 80vh; /* Adjust to limit the visible area */
-    overflow-y: auto; /* Enable vertical scrolling */
-    padding: 10px;
-    border: 1px solid #ccc; /* Optional: for better visibility */
-  }
-  
+.profile-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 15px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.save-button {
+  width: 100%;
+  padding: 10px;
+  background: blue;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.faq-section, .contact-section {
+  margin-top: 20px;
+  padding: 15px;
+  background: white;
+  border-radius: 10px;
+}
+
+.popup-message {
+  background: rgba(0, 128, 0, 0.8);
+  color: white;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}

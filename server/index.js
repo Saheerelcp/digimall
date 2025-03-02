@@ -43,6 +43,7 @@ const availabilityRoutes = require('./router/availabilityRoutes');
 const offerRoutes = require('./router/offerRoutes');
 const notificationRoutes = require("./router/notificationRoutes");
 const customerNotificationRoutes = require("./router/custNotificationRoutes");
+const sellerProfileRoutes = require("./router/sellerProfileRoutes");
 // Use routes (ensure the /api prefix is used in frontend and backend consistently)
 app.use('/api', customerRoutes);
 app.use('/api', sellerRoutes);
@@ -61,6 +62,7 @@ app.use('/api', availabilityRoutes);
 app.use('/api', offerRoutes);
 app.use('/api/', notificationRoutes);
 app.use('/api/customer/notifications', customerNotificationRoutes);
+app.use('/api/seller' , sellerProfileRoutes);
 // ** Fix: Use the same port for Express **
 const port = 5129;
 app.listen(port, () => {

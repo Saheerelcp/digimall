@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FaShoppingCart } from "react-icons/fa"; // Import the cart icon
+
+import { FaSearch, FaShoppingCart, FaCartPlus, FaMoneyBillWave, FaTag } from "react-icons/fa";
 import "../../styles/shopPage.css";
 
 const ShopPage = () => {
@@ -8,6 +9,7 @@ const ShopPage = () => {
   const { sellerId } = useParams();
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [offerPopup, setOfferPopup] = useState(null);
   const [showQuantityPopup, setShowQuantityPopup] = useState(null); // Tracks which product's popup is open
   const [selectedQuantity, setSelectedQuantity] = useState(1);
 
@@ -124,171 +126,52 @@ const ShopPage = () => {
 
   return (
     <div className="shop-page">
-      {/* Header */}
       <header className="shop-header">
-        <h1>Shop</h1>
-        <div className="cart-icon" onClick={() => navigate(`/cart/${customerId}`)}>
+        <h1 className="shop-name">Give and Take</h1>
+        <div className="search-bar">
+          <FaSearch className="search-icon" />
+          <input type="text" placeholder="Search for products..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+        </div>
+        <div className="cart-icon" onClick={() =>  navigate(`/cart/${customerId}/${sellerId}`)}>
           <FaShoppingCart size={24} />
         </div>
       </header>
 
-      {/* Search Bar */}
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search for products..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+      <div className="product-grid">
+        {filteredProducts.map((product) => (
+          <div key={product._id} className="product-card">
+            {product.offer && <FaTag className="offer-icon" onClick={() => setOfferPopup(product._id)} />}
+            {offerPopup === product._id && (
+              <div className="offer-popup">
+                <p>Discount: {product.offer.discount}%</p>
+                <p>Valid: {new Date(product.offer.discountStartDate).toLocaleDateString()} - {new Date(product.offer.discountEndDate).toLocaleDateString()}</p>
+                <p>New Price: ${((product.price * (1 - product.offer.discount / 100)).toFixed(2))}</p>
+                <button onClick={() => setOfferPopup(null)}>Close</button>
+              </div>
+            )}
+            <img className="image-placeholder" src={product.image || "/default-product-image.png"} alt={product.productName} />
+            <div className="product-info">
+              <h3>{product.productName}</h3>
+              <p>Price: ${product.price?.toFixed(2) || "N/A"}</p>
+              <p>Quantity:{product.quantity}Items/ Kg</p>
+              <div className="product-actions">
+               <button className="action-btn" onClick={() => handleAddToCart(product)} title="Add to Cart" >Add to cart</button> 
+              <button className="action-btn" onClick={() => handleBuyNow(product)} title="Buy Now" >Buy Now</button>
+              </div>
+            </div>
+            {showQuantityPopup === product._id && (
+              <div className="quantity-popup">
+                <label>
+                  Quantity:
+                  <input type="number" min="1" max={product.quantity} value={selectedQuantity} onChange={(e) => setSelectedQuantity(Number(e.target.value))} />
+                </label>
+                <button onClick={() => confirmBuyNow(product)}>Confirm</button>
+                <button onClick={() => setShowQuantityPopup(null)}>Cancel</button>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
-
-      {/* Products */}
-      {searchQuery && filteredProducts.length > 0 && (
-        <div className="search-results">
-          <h2>Search Results</h2>
-          <div className="product-list">
-            {filteredProducts.map((product) => {
-              const productOffer = product.offer;
-
-              return (
-                <div key={product._id} className="product-card">
-                  <img
-                    src={product.image || "/default-product-image.png"}
-                    alt={product.productName}
-                    className="product-image"
-                  />
-                  <div className="product-details">
-                    <h3>{product.productName}</h3>
-                    <p>Price: ${product.price}</p>
-                    <p>Quantity: {product.quantity.toFixed(2)}</p>
-
-                    {/* Display offer if exists */}
-                    {productOffer ? (
-                      <div className="offer-details">
-                        <p>Discount: {productOffer.discount}%</p>
-                        <p>
-                          Offer valid from{" "}
-                          {new Date(productOffer.discountStartDate).toLocaleDateString()} to{" "}
-                          {new Date(productOffer.discountEndDate).toLocaleDateString()}
-                        </p>
-                        <p>
-                          Discounted Price: $
-                          {(
-                            product.price -
-                            (product.price * productOffer.discount) / 100
-                          ).toFixed(2)}
-                        </p>
-                      </div>
-                    ) : (
-                      <p>No current offer</p>
-                    )}
-
-                    <div className="product-actions">
-                      <button onClick={() => handleAddToCart(product)}>
-                        Add to Cart
-                      </button>
-                      <button onClick={() => handleBuyNow(product)}>Buy Now</button>
-                      {showQuantityPopup === product._id && (
-                        <div className="quantity-popup">
-                          <label>
-                            Quantity:
-                            <input
-                              type="number"
-                              min="1"
-                              max={product.quantity}
-                              value={selectedQuantity}
-                              onChange={(e) =>
-                                setSelectedQuantity(Number(e.target.value))
-                              }
-                            />
-                          </label>
-                          <button onClick={() => confirmBuyNow(product)}>
-                            Confirm
-                          </button>
-                          <button onClick={() => setShowQuantityPopup(null)}>
-                            Cancel
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {(!searchQuery || filteredProducts.length === 0) && (
-        <div className="all-products">
-          <h2>All Products</h2>
-          <div className="product-list">
-            {products.map((product) => {
-              const productOffer = product.offer;
-              return (
-                <div key={product._id} className="product-card">
-                  <img
-                    src={product.image || "/default-product-image.png"}
-                    alt={product.productName}
-                    className="product-image"
-                  />
-                  <div className="product-details">
-                    <h3>{product.productName}</h3>
-                    <p>Price: ${product.price}</p>
-                    <p>Quantity: {product.quantity.toFixed(2)}</p>
-
-                    {/* Display offer if exists */}
-                    {productOffer ? (
-                      <div className="offer-details">
-                        <p>Discount: {productOffer.discount}%</p>
-                        <p>
-                          Offer valid from{" "}
-                          {new Date(productOffer.discountStartDate).toLocaleDateString()} to{" "}
-                          {new Date(productOffer.discountEndDate).toLocaleDateString()}
-                        </p>
-                        <p>
-                          Discounted Price: $
-                          {(
-                            product.price -
-                            (product.price * productOffer.discount) / 100
-                          ).toFixed(2)}
-                        </p>
-                      </div>
-                    ) : (
-                      <p>No current offer</p>
-                    )}
-
-                    <div className="product-actions">
-                      <button onClick={() => handleAddToCart(product)}>
-                        Add to Cart
-                      </button>
-                      <button onClick={() => handleBuyNow(product)}>Buy Now</button>
-                       {/* Quantity Popup */}
-                  {showQuantityPopup === product._id && (
-                    <div className="quantity-popup">
-                      <label>
-                        Quantity:
-                        <input
-                          type="number"
-                          min="1"
-                          
-                          max={product.quantity}
-                          value={selectedQuantity}
-                          onChange={(e) => setSelectedQuantity(Number(e.target.value))}
-                        />
-                      </label>
-                      <button onClick={() => confirmBuyNow(product)}>Confirm</button>
-                      <button onClick={() => setShowQuantityPopup(null)}>Cancel</button>
-                    </div>
-                  )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

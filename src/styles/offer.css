@@ -1,144 +1,107 @@
-/* offer.css */
 .complete-body {
-  font-family: Arial, sans-serif;
-  background-color: #f7f7f7;
   padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .offer-form {
-  background-color: white;
-  padding: 20px;
-  margin-bottom: 30px;
+  background: #fff;
+  padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .offer-form h1 {
-  color: #2d2d2d;
-  font-size: 28px;
-  margin-bottom: 20px;
-}
-
-.offer-form .form-group {
-  margin-bottom: 15px;
-}
-
-.offer-form label {
-  display: block;
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 8px;
-  color: #333;
-}
-
-.offer-form input,
-.offer-form select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-
-
-.offer-form input[type="date"] {
-  cursor: pointer;
-}
-
-.offer-form button {
-  background-color: #28a745;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
-  font-size: 18px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.offer-form button:hover {
-  background-color: #218838;
-}
-
-.error-message {
-  color: red;
-  font-size: 16px;
-  margin-bottom: 20px;
-}
-
-.offer-list h2 {
-  font-size: 24px;
-  color: #2d2d2d;
-  margin-bottom: 15px;
-}
-
-.offer-list ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.offer-item {
-  background-color: #fff;
-  padding: 15px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-}
-
-.offer-item img {
-  max-width: 80px;
-  margin-right: 20px;
-  border-radius: 6px;
-}
-
-.offer-item p {
-  margin: 5px 0;
-  font-size: 16px;
-  color: #555;
-}
-
-.offer-item strong {
-  color: #333;
-}
-
-.offer-item img {
-  margin-right: 15px;
-}
-
-.offer-list p {
-  font-size: 18px;
-  color: #888;
   text-align: center;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-  .complete-body {
-    padding: 10px;
-  }
+.form-group-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
 
-  .offer-form,
-  .offer-list {
-    margin: 0;
-    padding: 15px;
-  }
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
-  .offer-item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+.form-group label {
+  font-size: 14px;
+  margin-bottom: 3px;
+}
 
-  .offer-item img {
-    margin-bottom: 10px;
-  }
+.form-group input,
+.form-group select {
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
-  .offer-form button {
-    width: 100%;
-  }
+.add-offer-btn {
+  display: block;
+  margin: 10px auto;
+  padding: 10px 15px;
+  background: #0c9422;
+  color: white;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-offer-btn:hover {
+  background: #218838;
+}
+
+.offer-list {
+  margin-top: 20px;
+}
+
+.offer-cards {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 15px;
+}
+
+.offer-card {
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.offer-product-image {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.offer-card p {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.delete-btn {
+  margin-top: auto;
+  background: white;
+  color: red;
+  margin-left: 150px;
+  width: 30px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background 0.3s;
+}
+
+.delete-btn:hover {
+  background: red;
+  color: white;
 }

@@ -1,19 +1,12 @@
-.customer-dashboard {
-  font-family: 'Arial', sans-serif;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
+/* Header */
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  padding: 15px;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  justify-content: space-between;
+  padding: 0px 20px;
+  height: 80px;
+  background-color: #fff;
+  border-bottom: 2px solid #ddd;
 }
 
 .header-left {
@@ -24,7 +17,8 @@
 .logo {
   width: 50px;
   height: 50px;
-  margin-right: 15px;
+  margin-right: 10px;
+  margin-top: 18px;
 }
 
 .company-name {
@@ -34,81 +28,102 @@
 }
 
 .header-middle {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.search-box {
   display: flex;
   align-items: center;
+  background: #ffffff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-top: 20px;
 }
 
 .search-input {
-  padding: 10px;
-  width: 300px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  margin-right: 10px;
+  border: none;
+  outline: none;
+  padding: 8px;
+  width: 250px;
+  background: none;
 }
 
-.search-btn {
-  padding: 10px 15px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
+.search-icon {
+  color: #666;
+  margin-left: 5px;
   cursor: pointer;
 }
 
-.header-right .icon-container {
+.header-right {
   display: flex;
   align-items: center;
-  gap: 20px;
 }
 
 .icon {
-  font-size: 24px;
-  color: #6c757d;
+  font-size: 20px;
+  margin: 0 10px;
   cursor: pointer;
-  transition: color 0.3s ease;
 }
 
-.icon:hover {
-  color: #007bff;
+.profile-icon:hover{
+  color: blue;
 }
-
+.notification-icon:hover{
+  font-size: 26px;
+  color: rgb(255, 251, 0);
+}
+/* Shop List */
 .shops-section {
+  padding: 20px;
+}
+
+.shop-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(6, 1fr); /* 6 shops per row */
   gap: 20px;
 }
 
-.shop-block {
+.shop-card {
+  background: #fff;
   border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 20px;
+  padding: 15px;
+  border-radius: 8px;
   text-align: center;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s;
 }
 
-.shop-block:hover {
+.shop-card:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-.shop-icon {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 15px;
+.shop-card h3 {
+  color: #2c3e50;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.shop-card p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
 }
 
 .shop-now-btn {
-  background-color: #28a745;
-  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background-color: #27ae60;
+  color: #fff;
   border: none;
-  padding: 10px 15px;
+  padding: 8px 12px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  margin-top: 10px;
 }
 
 .shop-now-btn:hover {
-  background-color: #218838;
+  background-color: #219150;
 }

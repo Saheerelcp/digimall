@@ -1,13 +1,14 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import '../styles/LoginOptions.css';
+import logo from '../logo-images/logo10-EDIT.jpg';
 
 const LoginOptions = () => {
   const navigate = useNavigate();
 
   return (
     <div className="container">
-      <img src="https://via.placeholder.com/150" alt="Company Logo" />
+       <img src={logo} alt="Company Logo" />
       <h2>Login As</h2>
 
       <div className="option">

@@ -1,21 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"; // Import useParams hook
+import { useParams } from "react-router-dom";
 import "../../styles/sellerBills.css";
 
 const SellerBills = () => {
-  const { sellerId } = useParams(); // Extract sellerId from URL
+  const { sellerId } = useParams();
   const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedBill, setSelectedBill] = useState(null);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+
+  const openBillDetails = (bill) => {
+    setSelectedBill(bill);
+  };
+
+  const closeBillDetails = () => {
+    setSelectedBill(null);
+  };
 
   useEffect(() => {
-    // Fetch customer bills for the seller
     const fetchBills = async () => {
       try {
         const response = await fetch(`http://localhost:5129/api/seller-bills/${sellerId}`);
         const data = await response.json();
         console.log(data);
         if (response.ok) {
-          setBills(data.bills); // Set bills state with the data fetched from backend
+          setBills(data.bills);
         } else {
           alert(data.message || "Failed to fetch bills.");
         }
@@ -28,7 +38,7 @@ const SellerBills = () => {
     };
 
     if (sellerId) {
-      fetchBills(); // Fetch bills when sellerId is available
+      fetchBills();
     }
   }, [sellerId]);
 
@@ -45,135 +55,139 @@ const SellerBills = () => {
       const data = await response.json();
 
       if (response.ok) {
-        alert("Bill updated successfully!");
-        // Update the state to reflect changes in the UI
+        setPopupMessage("Bill updated successfully!");
         setBills((prevBills) =>
-          prevBills.map((bill) =>
-            bill._id === billId ? { ...bill, ...updatedDetails } : bill
-          )
+          prevBills.map((bill) => (bill._id === billId ? { ...bill, ...updatedDetails } : bill))
         );
       } else {
-        alert(data.message || "Failed to update the bill.");
+        setPopupMessage(data.message || "Failed to update the bill.");
       }
     } catch (error) {
       console.error("Error updating the bill:", error);
-      alert("An error occurred while updating the bill.");
+      setPopupMessage("An error occurred while updating the bill.");
+    } finally {
+      setShowPopup(true);
+      setTimeout(() => setShowPopup(false), 3000); // Hide popup after 3 seconds
     }
   };
 
   if (loading) return <p>Loading...</p>;
-
+{showPopup && <div className="popup-message">{popupMessage}</div>}
   return (
-    <div className="seller-bills-container">
-      <div className="seller-bills">
-        <h2>Customer Bills</h2>
+    <div className="customer-bills-container">
+      <h2 className="heading">Customer Bills</h2>
+      
+      <div className="bills-grid">
         {bills.length > 0 ? (
-          <div>
-            {bills.map((bill) => (
-              <div key={bill._id} className="bill-details">
-                <div className="customer-info">
-                  <p><strong>Customer Name:</strong> {bill.customerName}</p>
-                  <p><strong>Customer Address:</strong> {bill.customerAddress}</p>
-                  <p><strong>Order Date:</strong> {new Date(bill.orderDate).toLocaleString()}</p>
-
-                </div>
-
-                <hr className="divider" />
-
-                <div className="table-container">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>SI No.</th>
-                        <th>Product Name</th>
-                        <th>Price (in Shop)</th>
-                        <th>Quantity</th>
-                        <th>Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {bill.items.map((item, index) => (
-                        <tr key={index}>
-                          <td>{index + 1}</td>
-                          <td>{item.productName}</td>
-                          <td>{item.price}</td>
-                          <td>{item.quantity}</td>
-                          <td>{item.amount}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <td colSpan="4"><strong>Total Amount</strong></td>
-                        <td><strong>{bill.totalAmount}</strong></td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-
-                <div className="delivery-options">
-                  <label>
-                    Expected Delivery:
-                    <input
-                      type="datetime-local"
-                      value={bill.expectedDelivery || ""}
-                      onChange={(e) =>
-                        setBills((prevBills) =>
-                          prevBills.map((b) =>
-                            b._id === bill._id
-                              ? { ...b, expectedDelivery: e.target.value }
-                              : b
-                          )
-                        )
-                      }
-                    />
-                  </label>
-
-                  <fieldset>
-                    <legend>Status:</legend>
-                    {["Seen by Seller", "Ready for Delivery", "Out for Delivery", "Delivered"].map(
-                      (status) => (
-                        <label key={status}>
-                          <input
-                            type="radio"
-                            name={`status-${bill._id}`}
-                            value={status}
-                            checked={bill.status === status}
-                            onChange={(e) =>
-                              setBills((prevBills) =>
-                                prevBills.map((b) =>
-                                  b._id === bill._id
-                                    ? { ...b, status: e.target.value }
-                                    : b
-                                )
-                              )
-                            }
-                          />
-                          {status}
-                        </label>
-                      )
-                    )}
-                  </fieldset>
-
-                  <button
-                    onClick={() =>
-                      handleUpdateBill(bill._id, {
-                        expectedDelivery: bill.expectedDelivery,
-                        status: bill.status,
-                      })
-                    }
-                  >
-                    Update Bill
-                  </button>
-                </div>
-
+          bills.map((bill) => (
+            <div key={bill._id} className="bill-card" onClick={() => openBillDetails(bill)}>
+              <p><strong>Bill ID:</strong> {bill._id.slice(-6)}</p>
+              <p><strong>Customer:</strong> {bill.customerName}</p>
+              <p><strong>Order Date:</strong> {new Date(bill.orderDate).toLocaleDateString()}</p>
+              <div className="status-container">
+                <p className="current-status">Current Status: <strong>{bill.status ? bill.status : "Yet to update bill status"}</strong></p>
               </div>
-            ))}
-          </div>
+
+
+            </div>
+          ))
         ) : (
           <p>No bills available for this seller.</p>
         )}
       </div>
+
+      {selectedBill && (
+        <div className="bill-popup">
+          <div className="popup-content">
+            <button className="close-btn" onClick={closeBillDetails}>&times;</button>
+            <h3>Bill Details</h3>
+            <p><strong>Customer Name:</strong> {selectedBill.customerName}</p>
+            <p><strong>Customer Address:</strong> {selectedBill.customerAddress}</p>
+            <p><strong>Order Date:</strong> {new Date(selectedBill.orderDate).toLocaleString()}</p>
+            <hr />
+
+            {/* Bill Table */}
+            <div className="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>SI No.</th>
+                    <th>Product Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedBill.items.map((item, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>{item.productName}</td>
+                      <td>{item.price}</td>
+                      <td>{item.quantity}</td>
+                      <td>{item.amount}</td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colSpan="4"><strong>Total Amount</strong></td>
+                    <td><strong>{selectedBill.totalAmount}</strong></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            {/* Expected Delivery Date Input */}
+            <div className="form-group">
+              <label><strong>Expected Delivery Date:</strong></label>
+              <input
+                type="date"
+                value={selectedBill.expectedDelivery || ""}
+                onChange={(e) =>
+                  setSelectedBill((prevBill) => ({
+                    ...prevBill,
+                    expectedDelivery: e.target.value,
+                  }))
+                }
+              />
+            </div>
+
+            {/* Status Update */}
+            <div className="form-group">
+              <label><strong>Status:</strong></label>
+              <select
+                value={selectedBill.status}
+                onChange={(e) =>
+                  setSelectedBill((prevBill) => ({
+                    ...prevBill,
+                    status: e.target.value,
+                  }))
+                }
+              >
+                <option value="Seen by Seller">Seen by Seller</option>
+                <option value="Ready for Delivery">Ready for Delivery</option>
+                <option value="Out for Delivery">Out for Delivery</option>
+                <option value="Delivered">Delivered</option>
+              </select>
+            </div>
+
+            {/* Update Button */}
+            <button
+              className="update-btn"
+              onClick={() =>
+                handleUpdateBill(selectedBill._id, {
+                  expectedDelivery: selectedBill.expectedDelivery,
+                  status: selectedBill.status,
+                })
+              }
+            >
+              Update Bill
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

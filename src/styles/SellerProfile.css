@@ -1,0 +1,53 @@
+.profile-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background-color: white;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logout-button {
+    background:none;
+    border: none;
+    cursor: pointer;
+    color: red;
+    width: 50px;
+}
+.logout-button:hover{
+    color: white;
+    background-color: rgb(235, 18, 11);
+    border-radius: 25px;
+}
+
+.form-group-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-group {
+    flex: 1;
+}
+
+.input-field {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+}
+
+.faq-section, .contact-section {
+    margin-top: 20px;
+    background-color: rgb(255, 255, 255);
+    
+}
+ h3{
+    color: black;
+}
+.support-email, .support-phone {
+    font-weight: bold;
+    color: #007bff;
+}
