@@ -12,6 +12,8 @@ const ShopPage = () => {
   const [offerPopup, setOfferPopup] = useState(null);
   const [showQuantityPopup, setShowQuantityPopup] = useState(null); // Tracks which product's popup is open
   const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const [popupMessage, setPopupMessage] = useState("");
+    const [showPopup, setShowPopup] = useState(false);
 
   const customerId = localStorage.getItem("customerId");
 
@@ -73,8 +75,11 @@ const ShopPage = () => {
       });
 
       if (response.ok) {
-        alert("Product added to cart!");
-        navigate(`/cart/${customerId}/${sellerId}`);
+        
+        setPopupMessage(`Product added to cart!`);
+        setShowPopup(true);
+        setTimeout(() => setShowPopup(false), 3000); 
+        
       } else {
         const error = await response.json();
         alert(`Failed to add product to cart: ${error.message}`);
@@ -91,7 +96,10 @@ const ShopPage = () => {
 
   const confirmBuyNow = (product) => {
     if (selectedQuantity > product.quantity) {
-      alert(`Sorry, only ${product.quantity} items available in stock.`);
+      
+      setPopupMessage(`Sorry, only ${product.quantity} items available in stock.`);
+      setShowPopup(true);
+      setTimeout(() => setShowPopup(false), 3000); 
       return;
     }
     const productOffer = product.offer;
@@ -126,39 +134,47 @@ const ShopPage = () => {
 
   return (
     <div className="shop-page">
+      {showPopup && <div className="popup-message">{popupMessage}</div>}
       <header className="shop-header">
         <h1 className="shop-name">Give and Take</h1>
         <div className="search-bar">
           <FaSearch className="search-icon" />
           <input type="text" placeholder="Search for products..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
         </div>
-        <div className="cart-icon" onClick={() =>  navigate(`/cart/${customerId}/${sellerId}`)}>
+        <div className="cart-icon" onClick={() => navigate(`/cart/${customerId}/${sellerId}`)}>
           <FaShoppingCart size={24} />
         </div>
       </header>
-
+  
       <div className="product-grid">
         {filteredProducts.map((product) => (
           <div key={product._id} className="product-card">
+            {/* Offer Popup Trigger */}
             {product.offer && <FaTag className="offer-icon" onClick={() => setOfferPopup(product._id)} />}
+  
+            {/* Offer Popup - Positioned Above the Product Card */}
             {offerPopup === product._id && (
               <div className="offer-popup">
-                <p>Discount: {product.offer.discount}%</p>
-                <p>Valid: {new Date(product.offer.discountStartDate).toLocaleDateString()} - {new Date(product.offer.discountEndDate).toLocaleDateString()}</p>
-                <p>New Price: ${((product.price * (1 - product.offer.discount / 100)).toFixed(2))}</p>
-                <button onClick={() => setOfferPopup(null)}>Close</button>
+                <button className="btn-close-offer" onClick={() => setOfferPopup(null)}>X</button>
+                <p><strong>Discount:</strong> {product.offer.discount}%</p>
+                <p><strong>Valid:</strong> {new Date(product.offer.discountStartDate).toLocaleDateString()} - {new Date(product.offer.discountEndDate).toLocaleDateString()}</p>
+                <p><strong>New Price:</strong> ₹{((product.price * (1 - product.offer.discount / 100)).toFixed(2))}</p>
+                
               </div>
             )}
+  
             <img className="image-placeholder" src={product.image || "/default-product-image.png"} alt={product.productName} />
             <div className="product-info">
               <h3>{product.productName}</h3>
-              <p>Price: ${product.price?.toFixed(2) || "N/A"}</p>
-              <p>Quantity:{product.quantity}Items/ Kg</p>
+              <p>Price: ₹{product.price?.toFixed(2) || "N/A"}</p>
+              <p>Quantity: {product.quantity.toFixed(2)} </p>
               <div className="product-actions">
-               <button className="action-btn" onClick={() => handleAddToCart(product)} title="Add to Cart" >Add to cart</button> 
-              <button className="action-btn" onClick={() => handleBuyNow(product)} title="Buy Now" >Buy Now</button>
+                <button className="action-btn" onClick={() => handleAddToCart(product)} title="Add to Cart">Add to cart</button> 
+                <button className="action-btn" onClick={() => handleBuyNow(product)} title="Buy Now">Buy Now</button>
               </div>
             </div>
+  
+            {/* Quantity Selection Popup */}
             {showQuantityPopup === product._id && (
               <div className="quantity-popup">
                 <label>
@@ -174,6 +190,7 @@ const ShopPage = () => {
       </div>
     </div>
   );
+  
 };
 
 export default ShopPage;

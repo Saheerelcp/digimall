@@ -1,26 +1,24 @@
-
+/* Main container */
 .customer-profile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: #f4f4f4;
-  font-family: Arial, sans-serif;
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-.profile-heading {
-  margin-bottom: 20px;
-  font-size: 2rem;
-  color: #4CAF50;
+/* Fixed Header */
+.logo-block{
+  margin-top: 10px;
 }
+
 
 .profile-blocks {
   display: flex;
   gap: 20px;
   justify-content: center;
+  margin-top: 100px;
 }
 
+/* Blocks (Order Details, Save Address, Contact Us) */
 .block {
   width: 200px;
   height: 150px;
@@ -31,6 +29,9 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s;

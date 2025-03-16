@@ -5,7 +5,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import '../styles/sellerDashboard.css';
-import logo from '../logo-images/Preview (1).png';
+import logo from '../logo-images/logo10-EDIT.jpg';
 import watch from '../logo-images/watch.jpg'
 import juice from '../logo-images/juice.jpg'
 import toner from '../logo-images/toner.jpg'

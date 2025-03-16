@@ -30,6 +30,7 @@ import OfferForm from './Seller/dashBoard/offer';
 import NotificationPage from './Seller/dashBoard/notification';
 import CustomerNotificationPage from './Customer/dashboard/notificationCustomer';
 import SellerProfile from './Seller/sellerProfile';
+import ContactSupport from './Customer/dashboard/contactSupport';
 import './styles/LoginOptions.css';
 import './styles/Signup.css';
 import './styles/SignupSeller.css';
@@ -54,6 +55,7 @@ import './styles/offer.css';
 import './styles/notification.css';
 import './styles/customerNotification.css';
 import './styles/SellerProfile.css' ;
+import './styles/contactSupprot.css' ;
 function App() {
   return (
     <Router>
@@ -88,6 +90,7 @@ function App() {
           <Route path="notification-page" element={<NotificationPage/>} />
           <Route path="notifications-customer" element={<CustomerNotificationPage/>} />
           <Route path="seller-profile" element={<SellerProfile/>} />
+          <Route path="contact-us" element={<ContactSupport/>} />
         </Routes>
       </div>
     </Router>

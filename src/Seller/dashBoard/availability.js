@@ -71,7 +71,7 @@ const Availability = () => {
                   ></div>
                 </div>
                 <p className="product-name">{product.productName}</p>
-                <p className="product-quantity">Quantity: {product.quantity}</p>
+                <p className="product-quantity">Quantity: {(product.quantity).toFixed(2)}</p>
               </div>
             ))
           ) : (

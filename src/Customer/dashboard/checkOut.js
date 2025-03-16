@@ -4,6 +4,8 @@ import "../../styles/checkout.css";
 
 const Checkout = () => {
   const [step, setStep] = useState(0);
+    const [popupMessage, setPopupMessage] = useState("");
+     const [showPopup, setShowPopup] = useState(false);
   const [formData, setFormData] = useState({
     country: "",
     fullName: "",
@@ -32,7 +34,8 @@ const Checkout = () => {
         const response = await fetch(`http://localhost:5129/api/get-saved-addresses/${customerId}`);
         if (response.ok) {
           const data = await response.json();
-          setSavedAddresses(data.address || []);
+          setSavedAddresses(data.address || []); 
+          
         } else {
           console.error("Failed to fetch saved addresses.");
         }
@@ -59,32 +62,55 @@ const Checkout = () => {
 
   const handleNextStep = async () => {
     if (step === 0) {
-      const addressToSave = useSavedAddress ? selectedAddress : formData;
-      try {
-        const response = await fetch("http://localhost:5129/api/save-address", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            customerId,
-            address: addressToSave,
-          }),
-        });
+        const addressToSave = useSavedAddress ? selectedAddress : formData;
 
-        if (response.ok) {
-          alert("Address saved successfully!");
-          setStep(step + 1);
-        } else {
-          throw new Error("Failed to save address.");
+        // Skip validation and database storage if using a saved address
+        if (useSavedAddress) {
+            setStep(step + 1); // Move to the next step directly
+            return;
         }
-      } catch (error) {
-        console.error("Error saving address:", error.message);
-      }
+
+        // Validate only when entering a new address
+        const isEmpty = Object.values(formData).some(value => value.trim() === "");
+        if (isEmpty) {
+            setPopupMessage("All fields are required!");
+            setShowPopup(true);
+            setTimeout(() => setShowPopup(false), 3000);
+            return;
+        }
+
+        try {
+            // Save the new address in local state
+            setSavedAddresses((prev) => [...prev, addressToSave]);
+
+            const response = await fetch("http://localhost:5129/api/save-address", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    customerId,
+                    address: addressToSave,
+                }),
+            });
+
+            if (response.ok) {
+                setPopupMessage("Address saved successfully!");
+                setShowPopup(true);
+                setTimeout(() => setShowPopup(false), 3000);
+                setStep(step + 1);
+            } else {
+                throw new Error("Failed to save address.");
+            }
+        } catch (error) {
+            console.error("Error saving address:", error.message);
+        }
     } else {
-      setStep(step + 1);
+        setStep(step + 1);
     }
-  };
+};
+
+
 
   const handlePreviousStep = () => {
     if (step > 0) setStep(step - 1);
@@ -92,9 +118,12 @@ const Checkout = () => {
 
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
-
+    
     if (!paymentMethod) {
-      return alert("Please select a payment method.");
+      setPopupMessage("Please select a payment method");
+      setShowPopup(true);
+      setTimeout(() => setShowPopup(false), 3000);
+      return
     }
 
     try {
@@ -116,11 +145,12 @@ const Checkout = () => {
         totalAmount = orderItems[0].amount;
       } else {
         // Handle cart scenario
-        const cartResponse = await fetch(`http://localhost:5129/api/cart/${customerId}`);
+        const cartResponse = await fetch(`http://localhost:5129/api/cart/${customerId}/${sellerId}`);
         const cartData = await cartResponse.json();
-
+        console.log("cart data"+cartData.items);
         if (!cartData?.items?.length) {
           return alert("No items in the cart.");
+         
         }
 
         orderItems = cartData.items.map((item) => ({
@@ -130,10 +160,10 @@ const Checkout = () => {
           price: item.price,
           amount: item.price * item.quantity,
         }));
-
+        console.log("thooook daaa"+orderItems)
         totalAmount = orderItems.reduce((total, item) => total + item.amount, 0);
       }
-
+      
       // Check stock availability
       for (const item of orderItems) {
         const purchaseResponse = await fetch("http://localhost:5129/api/purchase", {
@@ -152,6 +182,7 @@ const Checkout = () => {
           throw new Error(`Stock unavailable for ${item.productName}.`);
         }
       }
+      console.log("Order Items:", orderItems);
 
       // Place the order
       const response = await fetch("http://localhost:5129/api/create-customer-bill", {
@@ -169,7 +200,9 @@ const Checkout = () => {
       });
 
       if (response.ok) {
-        alert("Payment successful!");
+        setPopupMessage(`Payment successful!`);
+        setShowPopup(true);
+        setTimeout(() => setShowPopup(false), 3000);
         navigate(`/delivery-updates/${customerId}`);
       } else {
         const data = await response.json();
@@ -183,10 +216,10 @@ const Checkout = () => {
 
   return (
     <form onSubmit={handlePaymentSubmit} className="checkout-form">
-      <h2>{steps[step]}</h2>
-
+      <h2 className="form-title">{steps[step]}</h2>
+      {showPopup && <div className="popup-message">{popupMessage}</div>}
       {step === 0 && (
-        <div className="step-0-container">
+        <div className="step-container">
           {savedAddresses.length > 0 && (
             <div className="address-options">
               <h3>Select a Saved Address or Enter a New Address</h3>
@@ -220,15 +253,9 @@ const Checkout = () => {
                 <h4>Select a Saved Address</h4>
                 {savedAddresses.map((address, index) => (
                   <div key={index} className="saved-address-item">
-                    <input
-                      type="radio"
-                      name="savedAddress"
-                      value={index}
-                      onChange={handleSavedAddressChange}
-                    />
+                    <input type="radio" name="savedAddress" value={index}  onChange={handleSavedAddressChange}/>
                     <span>
-                      {address.fullName}, {address.houseNumber}, {address.area}, {" "}
-                      {address.city}, {address.state} - {address.pinCode}
+                      {address.fullName}, {address.houseNumber}, {address.area}, {address.city}, {address.state} - {address.pinCode}
                     </span>
                   </div>
                 ))}
@@ -237,7 +264,7 @@ const Checkout = () => {
               <div className="new-address-form">
                 <h4>Enter Address Details</h4>
                 {Object.keys(formData).map((field) => (
-                  <div key={field} className="form-group-row">
+                  <div key={field} className="form-group">
                     <label>{field.replace(/([A-Z])/g, " $1").toUpperCase()}</label>
                     <input
                       type="text"
@@ -253,30 +280,18 @@ const Checkout = () => {
           </div>
         </div>
       )}
-
+      
       {step === 1 && (
         <div className="payment-container">
           <h3>Select Payment Method</h3>
           <div className="payment-options">
-            <label>
-              <input
-                type="radio"
-                name="payment"
-                value="GPay"
-                checked={paymentMethod === "GPay"}
-                onChange={handlePaymentChange}
-              />
-              Google Pay
+            <label className="disabled-option">
+              <input type="radio" name="payment" value="GPay" disabled />
+              Google Pay <span className="coming-soon">(Coming Soon)</span>
             </label>
-            <label>
-              <input
-                type="radio"
-                name="payment"
-                value="PhonePe"
-                checked={paymentMethod === "PhonePe"}
-                onChange={handlePaymentChange}
-              />
-              PhonePe
+            <label className="disabled-option">
+              <input type="radio" name="payment" value="PhonePe" disabled />
+              PhonePe <span className="coming-soon">(Coming Soon)</span>
             </label>
             <label>
               <input
@@ -294,18 +309,12 @@ const Checkout = () => {
 
       <div className="buttons-row">
         {step > 0 && (
-          <button type="button" className="back-btn" onClick={handlePreviousStep}>
-            Back
-          </button>
+          <button type="button" className="back-btn" onClick={handlePreviousStep}>Back</button>
         )}
         {step < steps.length - 1 ? (
-          <button type="button" className="next-btn" onClick={handleNextStep}>
-            Next
-          </button>
+          <button type="button" className="next-btn" onClick={handleNextStep}>Next</button>
         ) : (
-          <button type="submit" className="submit-btn">
-            Place Order
-          </button>
+          <button type="submit" className="submit-btn">Place Order</button>
         )}
       </div>
     </form>

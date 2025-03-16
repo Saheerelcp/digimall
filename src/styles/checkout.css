@@ -1,183 +1,148 @@
-/* checkout.css */
-
-
-
 .checkout-form {
-  width: 90%;
-  max-width: 600px;
-  margin: 20px auto;
-  background: #fff;
+  width: 50%;
+  margin: auto;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+  margin-top: 10px;
 }
 
-.checkout-form h2 {
+h2 {
   text-align: center;
-  color: #4CAF50;
-  margin-bottom: 20px;
-  font-size: 24px;
+  color: #333;
 }
 
-.step-0-container,
-.payment-container {
+.step-0-container, .payment-container {
   margin-top: 20px;
 }
 
-h3, h4 {
-  color: #333;
+.address-options h3, .saved-address-list h4, .new-address-form h4, .payment-container h3 {
   margin-bottom: 10px;
-}
-
-.address-options {
-  margin-bottom: 20px;
-  background: #f9f9f9;
-  border: 1px solid #ddd;
-  padding: 15px;
-  border-radius: 8px;
+  color: #444;
 }
 
 .radio-group {
   display: flex;
-  gap: 15px;
-  align-items: center;
+  gap: 30px;
   margin-bottom: 15px;
+  
+  margin-left: 50px;
 }
 
 .radio-group label {
   display: flex;
   align-items: center;
-  gap: 5px;
-  cursor: pointer;
+  
+  font-size: 14px;
+  color: #555;
 }
 
-.saved-address-list {
-  margin-top: 15px;
-  background: #eef9f0;
-  border: 1px solid #4CAF50;
+.radio-group input {
+  margin-right: 0px;
+  width: 100px;
+}
+
+.saved-address-list, .new-address-form {
+  background: #f9f9f9;
+  padding: 15px;
   border-radius: 8px;
-  padding: 10px;
 }
 
 .saved-address-item {
-  margin-bottom: 10px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  margin-bottom: 10px;
+  gap: 20px;
 }
 
-.new-address-form {
-  margin-top: 20px;
-  padding: 15px;
-  background: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+.saved-address-item input {
+  margin-right: 10px;
+  width: 10px;
+  
 }
 
 .form-group-row {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 15px;
 }
 
 .form-group-row label {
-  display: block;
+  font-size: 14px;
   font-weight: bold;
   margin-bottom: 5px;
 }
 
 .form-group-row input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   font-size: 14px;
 }
 
 .payment-options {
-  margin-top: 20px;
-  padding: 15px;
-  background: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .payment-options label {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
-  cursor: pointer;
+  font-size: 16px;
+  color: #333;
 }
 
 .payment-options input {
   margin-right: 10px;
+  width: 10px;
+}
+
+.payment-options label[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.coming-soon {
+  font-size: 12px;
+  color: red;
+  margin-left: 10px;
 }
 
 .buttons-row {
-  margin-top: 20px;
   display: flex;
   justify-content: space-between;
+  margin-top: 20px;
+  gap: 10px;
 }
 
-.back-btn,
-.next-btn,
-.submit-btn {
+.back-btn, .next-btn, .submit-btn {
   padding: 10px 15px;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 14px;
-  color: #fff;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .back-btn {
-  background-color: #555;
-}
-
-.back-btn:hover {
-  background-color: #444;
+  background-color: #ccc;
+  
 }
 
 .next-btn {
-  background-color: #4CAF50;
-}
-
-.next-btn:hover {
-  background-color: #45A049;
+  background-color: #28a745;
+  color: white;
 }
 
 .submit-btn {
-  background-color: #4CAF50;
-  width: 100%;
+  background-color: #007bff;
+  color: white;
+  
 }
 
-.submit-btn:hover {
-  background-color: #45A049;
-}
-
-.alert {
-  margin-top: 10px;
-  padding: 10px;
-  border: 1px solid #4CAF50;
-  background: #e8f5e9;
-  color: #2e7d32;
-  border-radius: 4px;
-}
-
-@media (max-width: 768px) {
-  .radio-group {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .buttons-row {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .back-btn,
-  .next-btn,
-  .submit-btn {
-    width: 100%;
-  }
+.back-btn:hover, .next-btn:hover, .submit-btn:hover {
+  opacity: 0.8;
 }

@@ -1,83 +1,168 @@
-.profile-container {
-  max-width: 800px;
-  margin: 0 auto;
+.customer-bills-container {
   padding: 20px;
-  background: #f9f9f9;
-  border-radius: 10px;
+  max-width: 1200px;
+  margin: auto;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.profile-title {
+.heading {
+  text-align: center;
   font-size: 24px;
-  color: #333;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #2E7D32;
 }
 
-.logout-button {
-  background: red;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
+.bills-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 15px;
 }
 
-.view-details-button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 15px;
-  background: green;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.profile-card {
+.bill-card {
   background: white;
-  padding: 20px;
   border-radius: 10px;
-  margin-top: 15px;
+  padding: 15px;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
 }
 
-.form-group {
+.bill-card:hover {
+  transform: scale(1.05);
+}
+
+.bill-card p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+
+
+.current-status {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333; /* Adjust color for visibility */
+}
+
+
+
+
+
+
+/* Popup Styling */
+.bill-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  max-width: 600px;
+  max-height: 90vh; /* Limits height to prevent overflow */
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-content {
+  overflow-y: auto; /* Enables vertical scrolling */
+  max-height: 75vh; /* Ensures scrolling only within content */
+  padding-right: 10px; /* Prevents text from touching scrollbar */
+}
+
+.table-container {
+  overflow-x: auto;
   margin-bottom: 15px;
 }
 
-.input-field {
+table {
   width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+tfoot td {
+  font-weight: bold;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input[type="date"], select {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  font-size: 14px;
 }
 
-.save-button {
-  width: 100%;
-  padding: 10px;
-  background: blue;
+.update-btn {
+  background: #28a745;
   color: white;
+  padding: 10px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
+  width: 100%;
 }
 
-.faq-section, .contact-section {
-  margin-top: 20px;
-  padding: 15px;
-  background: white;
-  border-radius: 10px;
+.update-btn:hover {
+  background: #218838;
 }
 
-.popup-message {
-  background: rgba(0, 128, 0, 0.8);
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 40px;
+  background-color: white;
+  color: red;
+  width: 40px;
+  height: 50px;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
   color: white;
-  padding: 10px;
-  text-align: center;
-  border-radius: 5px;
-  margin-bottom: 10px;
+  background-color: red;
 }
+.popup-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #1f2ef7;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  font-size: 16px;
+  animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  10% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+}
+

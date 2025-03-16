@@ -72,9 +72,11 @@ const SellerBills = () => {
   };
 
   if (loading) return <p>Loading...</p>;
-{showPopup && <div className="popup-message">{popupMessage}</div>}
+
   return (
+   
     <div className="customer-bills-container">
+       {showPopup && <div className="popup-message">{popupMessage}</div>}
       <h2 className="heading">Customer Bills</h2>
       
       <div className="bills-grid">

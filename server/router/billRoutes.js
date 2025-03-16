@@ -5,10 +5,10 @@ const Notification = require("../model/customerNotifications");
 const Product = require("../model/Product"); // Order model (if needed for tracking)
 const Cart = require("../model/Cart"); // Cart model
 // Fetch the cart for a specific customer
-router.get("/cart/:customerId", async (req, res) => {
+router.get("/cart/:customerId/:sellerId", async (req, res) => {
     try {
-        const { customerId } = req.params;
-        const cart = await Cart.findOne({ customerId });
+        const { customerId,sellerId } = req.params;
+        const cart = await Cart.findOne({ customerId ,sellerId});
 
         if (!cart) {
             return res.status(404).json({ message: "Cart not found." });

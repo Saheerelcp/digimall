@@ -245,6 +245,7 @@ function AddProduct() {
       {/* Product List */}
       <div className="products-grid">
         {products
+        .filter((product) => product.category === category)
           .filter((product) =>
             product.productName.toLowerCase().includes(searchTerm.toLowerCase())
           )

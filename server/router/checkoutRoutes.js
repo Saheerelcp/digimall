@@ -24,35 +24,34 @@ router.get("/get-saved-addresses/:customerId", async (req, res) => {
 router.post("/save-address", async (req, res) => {
   try {
     const { customerId, address } = req.body;
-   
 
-    // Validate input
     if (!customerId || !address) {
       return res.status(400).send("Customer ID and address are required.");
     }
 
-    // Find the customer by ID and update their address
+    // Find customer and push new address to the array
     const customer = await Customer.findByIdAndUpdate(
       customerId,
-      { address },
-      { new: true } // Return the updated document
+      { $push: { address: address } }, // Append instead of overwrite
+      { new: true }
     );
 
     if (!customer) {
-      return res.status(404).send("Customer not found.");
+      return res.status(404).send("Customer not found."); 
     }
 
-    res.status(200).send("Address updated successfully.");
+    res.status(200).json({ message: "Address added successfully", customer });
   } catch (error) {
-    console.error("Error updating address:", error.message);
-    res.status(500).send("Error updating address: " + error.message);
+    console.error("Error adding address:", error.message);
+    res.status(500).send("Error adding address: " + error.message);
   }
 });
+
 
 router.post("/create-customer-bill", async (req, res) => {
   try {
     const { customerId, sellerId, items, totalAmount, address } = req.body;
-
+    console.log("what is the product :"+items);
     // Log the received address for debugging
     console.log("Received address:", address);
 
